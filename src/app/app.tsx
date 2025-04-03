@@ -12,6 +12,7 @@ const Intro = dynamic(() => import("~/components/Intro2"), {
 
 
 export default function App(
+  { title }: { title?: string }
 ) {
-  return <Intro />;
+  return <Intro title={title} />;
 }

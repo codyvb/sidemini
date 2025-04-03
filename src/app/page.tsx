@@ -5,7 +5,7 @@ const appUrl = process.env.NEXT_PUBLIC_URL;
 
 const frame = {
   version: "next",
-  imageUrl: "https://www.mini.sidequest.build/card7.png",
+  imageUrl: "https://.mini.sidequest.build/card7.png",
   aspectRatio: "3:2",
   button: {
     title: "Launch Sidequest",
@@ -13,7 +13,7 @@ const frame = {
       type: "launch_frame",
       name: "Sidequest",
       url: "https://mini.sidequest.build",
-      splashImageUrl: "https://www.mini.sidequest.build/card7.png",
+      splashImageUrl: "https://mini.sidequest.build/card7.png",
       splashBackgroundColor: "#f7f7f7",
     },
   },

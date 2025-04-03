@@ -13,7 +13,7 @@ const frame = {
       type: "launch_frame",
       name: "Sidequest",
       url: "https://mini.sidequest.build",
-      splashImageUrl: "https://www.sidequest.build/card.png",
+      splashImageUrl: "https://www.mini.sidequest.build/card7.png",
       splashBackgroundColor: "#f7f7f7",
     },
   },

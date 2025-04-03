@@ -2,7 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom animations */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
 
+.marquee-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.marquee-content {
+  display: flex;
+  animation: marquee 15s linear infinite;
+  white-space: nowrap;
+}
 
 body {
   color: #171717;

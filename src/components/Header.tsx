@@ -53,7 +53,7 @@ const Header = () => {
 
   return (
     <div
-      className={`header-container z-[88888] w-full border-b ${
+      className={`header-container z-[88888] w-full ${
         isDarkMode ? "border-neutral-700" : "border-neutral-400"
       }`}
       style={{

@@ -42,11 +42,10 @@ export default async function RootLayout({
   
   return (
     <html lang="en">
-      <body>
+      <body className="overscroll-none">
         <Providers session={session}>
           <Header />
           {children}
-          <Footer />
         </Providers>
       </body>
     </html>

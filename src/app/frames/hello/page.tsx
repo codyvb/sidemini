@@ -7,10 +7,10 @@ const frame = {
   version: "next",
   imageUrl: `${appUrl}/frames/hello/opengraph-image`,
   button: {
-    title: "Launch Frame",
+    title: "Launch",
     action: {
       type: "launch_frame",
-      name: "Farcaster Frames v2 Demo",
+      name: "Sidequest",
       url: `${appUrl}/frames/hello/`,
       splashImageUrl: `${appUrl}/splash.png`,
       splashBackgroundColor: "#f7f7f7",

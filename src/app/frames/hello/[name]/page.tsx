@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: "Launch Frame",
       action: {
         type: "launch_frame",
-        name: "Farcaster Frames v2 Demo",
+        name: "Sidequest",
         url: `${appUrl}/frames/hello/${name}/`,
         splashImageUrl: `${appUrl}/splash.png`,
         splashBackgroundColor: "#f7f7f7",
@@ -43,5 +43,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function HelloNameFrame({ params }: Props) {
   const { name } = await params;
 
-  return <App title={`Hello, ${name}`} />;
+  return <App  title={`Hello, ${name}`} />;
 }

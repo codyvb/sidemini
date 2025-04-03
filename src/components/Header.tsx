@@ -57,10 +57,10 @@ const Header = () => {
         isDarkMode ? "border-neutral-700" : "border-neutral-400"
       }`}
       style={{
-        position: isDarkMode ? "fixed" : "relative",
+        position: isDarkMode ? "fixed" : "fixed",
         background: isDarkMode
           ? "linear-gradient(to bottom, #000000 0%, rgba(0, 0, 0, 0) 100%)"
-          : "none",
+          : "#d7d7d7",
       }}
     >
       {/* Main header */}

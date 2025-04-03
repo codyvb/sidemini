@@ -3,10 +3,34 @@ import type { Metadata } from "next";
 import { getSession } from "~/auth"
 import "~/app/globals.css";
 import { Providers } from "~/app/providers";
+import Header from "~/components/Header";
+import Footer from "~/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Farcaster Frames v2 Demo",
-  description: "A Farcaster Frames v2 demo app",
+  title: "sidequest.build",
+  icons: [
+    { rel: "icon", url: "./favicon.ico" },
+    { rel: "apple-touch-icon", url: "./apple-touch-icon.png" },
+    { rel: "icon", url: "./favicon-32x32.png", sizes: "32x32" },
+    { rel: "icon", url: "./favicon-16x16.png", sizes: "16x16" },
+  ],
+  openGraph: {
+    title: "sidequest.build",
+    description: "back the build",
+    images: [
+      {
+        url: "./card.png",
+        width: 1200,
+        height: 630,
+        alt: "",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "sidequest.build",
+    images: ["./card.png"],
+  },
 };
 
 export default async function RootLayout({
@@ -19,7 +43,11 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers session={session}>{children}</Providers>
+        <Providers session={session}>
+          <Header />
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

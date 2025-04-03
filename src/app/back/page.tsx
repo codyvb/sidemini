@@ -62,6 +62,40 @@ const Project = () => {
     };
   }, []);
 
+  // Video ref for autoplay handling
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Ensure video autoplay works on all devices, especially mobile
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      // Try to play the video as soon as it's loaded
+      const playVideo = async () => {
+        try {
+          await videoElement.play();
+        } catch (error) {
+          console.error('Autoplay failed:', error);
+          // Add a click event listener as fallback for devices that require user interaction
+          document.addEventListener('click', () => {
+            videoElement.play();
+          }, { once: true });
+        }
+      };
+
+      // Play when metadata is loaded
+      videoElement.addEventListener('loadedmetadata', playVideo);
+      
+      // Also try to play immediately if already loaded
+      if (videoElement.readyState >= 2) {
+        playVideo();
+      }
+
+      return () => {
+        videoElement.removeEventListener('loadedmetadata', playVideo);
+      };
+    }
+  }, []);
+
   // Goal amount from project data
   const GOAL_AMOUNT = 10106;
 
@@ -73,10 +107,10 @@ const Project = () => {
     location: "Brooklyn, NY",
     category: "Software",
     stats: {
-      goal: "$10,000",
+      goal: "$2,000",
       backers: "2",
-      daysToGo: "20",
-      deadline: "Tue, March 18 2025 12:00 PM MDT",
+      deadline: "Tue, April 8 2025 1:00 PM MST",
+      daysToGo: "5",
     },
     creatorInfo: {
       firstCreated: true,
@@ -85,12 +119,12 @@ const Project = () => {
     },
   };
 
-  // Function to fetch contract value
+  // Function to fetch contract value and total mints
   useEffect(() => {
-    const fetchContractValue = async () => {
+    const fetchContractData = async () => {
       try {
         const NFT_CONTRACT_ADDRESS =
-          "0xA89c217C69f0647B39d2544f4A978BF744B19641";
+          "0xc049e891b0542414ead02223b1b70e0bc99d1511";
         const provider = new ethers.JsonRpcProvider("https://mainnet.base.org");
 
         // Get contract balance
@@ -108,16 +142,49 @@ const Project = () => {
           const valueInUsd = balanceInEth * data.ethereum.usd;
           setContractValue(valueInUsd);
         }
+
+        // Create a contract instance to fetch total mints
+        // This is a minimal ABI with just the totalSupply function
+        const minimalAbi = [
+          {
+            "inputs": [],
+            "name": "totalSupply",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          }
+        ];
+        
+        // Create contract instance
+        const contract = new ethers.Contract(NFT_CONTRACT_ADDRESS, minimalAbi, provider);
+        
+        try {
+          // Call totalSupply function to get the number of mints
+          const totalSupply = await contract.totalSupply();
+          setBackersCount(Number(totalSupply));
+        } catch (error) {
+          console.error("Error fetching total supply:", error);
+          // If totalSupply fails, try to estimate from the transaction count
+          const txCount = await provider.getTransactionCount(NFT_CONTRACT_ADDRESS);
+          // Rough estimate - each mint is likely a transaction
+          setBackersCount(txCount);
+        }
       } catch (error) {
-        console.error("Error fetching contract value:", error);
+        console.error("Error fetching contract data:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchContractValue();
+    fetchContractData();
     // Refresh every minute
-    const intervalId = setInterval(fetchContractValue, 60000);
+    const intervalId = setInterval(fetchContractData, 60000);
     return () => clearInterval(intervalId);
   }, []);
   // Format currency for display
@@ -218,17 +285,19 @@ const Project = () => {
                     <div className="absolute inset-0">
                       {/* Background image removed as video autoplays */}
                       
-                      {/* Video element (autoplays with no audio) */}
+                      {/* Video element (pure autoplay with no interface) */}
                       <video 
                         id="main-video"
+                        ref={videoRef}
                         className="absolute inset-0 w-full h-full object-cover"
                         src="/loom.mp4"
                         playsInline
-                        controls
-                        preload="metadata"
+                        preload="auto"
                         autoPlay
                         muted
                         loop
+                        disablePictureInPicture
+                        disableRemotePlayback
                       />
                       
                       {/* Play button removed as video autoplays */}
@@ -337,7 +406,7 @@ const Project = () => {
                 </div>
                 <div className="mb-4 md:mb-0">
                   <h2 className="text-2xl font-bold">{isLoading ? "Loading..." : backersCount}</h2>
-                  <p className="text-neutral-600">backers</p>
+                  <p className="text-neutral-600">mints</p>
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold">{project.stats.daysToGo}</h2>
@@ -370,7 +439,7 @@ const Project = () => {
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           {/* Project story content */}
           <div>
-            <h2 className="text-2xl font-bold mb-4">Setup</h2>
+            <h2 className="text-2xl font-bold mb-4">Story</h2>
             <p className="mb-4">
             We&apos;re building Deep Research for people building onchain. A bridge connecting Farcaster data to other sources relevant to understanding onchain builders and the products they&apos;re working on.
             </p>
@@ -505,13 +574,13 @@ const Project = () => {
               <div className="text-left font-bold text-lg mb-2">
                 Access Pass to Version 1
               </div>
-              <div className="relative w-full rounded-xl flex items-center justify-center">
+              {/* <div className="relative w-full rounded-xl flex items-center justify-center">
                 <img
                   src="/quote7.png"
                   alt="Brick"
                   className="w-full h-auto rounded-xl"
                 />
-              </div>
+              </div> */}
 
               <div className="w-full text-neutral-800 mt-2">
                 <div className="text-left">

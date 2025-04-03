@@ -11,6 +11,7 @@ declare module "next-auth" {
 }
 
 export const authOptions: AuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET || process.env.NEXTAUTH_SECERT,
     // Configure one or more authentication providers
   providers: [
     CredentialsProvider({

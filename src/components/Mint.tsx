@@ -45,6 +45,9 @@ export default function Demo({ title }: { title?: string } = { title: "Mint Demo
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
+  
+  // Fixed ETH price in USD
+  const ethPrice = 1800.76;
 
   // Force switch to Base mainnet when the component mounts
   useEffect(() => {
@@ -116,8 +119,8 @@ export default function Demo({ title }: { title?: string } = { title: "Mint Demo
       return;
     }
     
-    // Calculate the value based on quantity (0.0001 ETH per mint)
-    const valuePerMint = BigInt(10000000000000000); // 0.0001 ETH in wei
+    // Calculate the value based on quantity (0.01 ETH per mint)
+    const valuePerMint = BigInt(10000000000000000); // 0.01 ETH in wei (10^16)
     const totalValue = valuePerMint * BigInt(mintQuantity);
     
     try {
@@ -201,132 +204,113 @@ export default function Demo({ title }: { title?: string } = { title: "Mint Demo
     return <div>Loading...</div>;
   }
 
-  return (
-    <div className="w-full ">
-      <div className="w-[300px] mx-auto py-2 px-2">
-        <h1 className="text-2xl font-bold text-center mb-4">{title}</h1>
-        
-        <div className="mb-4 p-2 bg-gray-100 rounded-lg">
-          <h2 className="font-bold text-black text-sm mb-1">Status</h2>
-          <div className="text-xs text-black">
-            {isInFarcaster === null ? (
-              <span className="text-yellow-500">Detecting environment...</span>
-            ) : isInFarcaster ? (
-              <span className="text-green-500">Running inside Farcaster Frame ✓</span>
-            ) : (
-              <span className="text-blue-500">Running outside Farcaster Frame</span>
-            )}
-            {isInFarcaster && context && (
-              <div className="mt-1">
-                <div>Context Details:</div>
-                <pre className="mt-1 text-[10px] overflow-x-auto">
-                  {JSON.stringify(context, null, 2).substring(0, 200)}...
-                </pre>
-              </div>
-            )}
+  // Render the price information section in receipt style
+  const renderPriceInfo = () => {
+    // Fixed mint price: 0.01 ETH (real price from contract)
+    const mintPriceETH = 0.01;
+    const mintPriceUSD = mintPriceETH * ethPrice;
+    
+    return (
+      <>
+        <div className="flex justify-between items-center mb-4">
+          <div className="text-xl font-bold mt-[-20px]">Access Pass</div>
+          <div className="text-right">
+            <div className="text-xl font-bold">${mintPriceUSD.toFixed(2)} USD</div>
+            <div className="text-sm text-gray-500">({mintPriceETH.toFixed(4)} ETH)</div>
           </div>
         </div>
-        
-        <div className="mb-4">
-          {address && (
-            <div className="my-2 text-xs">
-              Address: <pre className="inline">{truncateAddress(address)}</pre>
-            </div>
-          )}
 
-          {chainId && (
-            <div className="my-2 text-xs">
-              Chain ID: <pre className="inline">{chainId === 8453 ? "8453 (Base)" : chainId}</pre>
+        <div className="flex justify-between items-center mt-2 mb-4">
+          <span>Quantity:</span>
+          <div className="flex items-center">
+            <button
+              onClick={() => setMintQuantity(prev => Math.max(1, prev - 1))}
+              disabled={mintQuantity <= 1 || !isConnected}
+              className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-l"
+            >
+              -
+            </button>
+            <div className="w-12 h-8 flex items-center justify-center border-t border-b border-gray-300">
+              {mintQuantity}
             </div>
-          )}
-
-          <Button
-            onClick={handleWalletConnection}
-          >
-            {isConnected ? "Disconnect" : "Connect"}
-          </Button>
-
-          {/* Wallet Selection Modal - Only shown outside Farcaster */}
-          {showWalletModal && !isConnected && !isInFarcaster && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg p-4 w-[280px] max-w-full">
-                <h3 className="text-lg font-bold mb-3 text-black">Select a Wallet</h3>
-                <div className="space-y-2">
-                  <button
-                    className="w-full py-2 px-3 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center text-black"
-                    onClick={() => connectWithWallet(1)} // MetaMask/Injected
-                  >
-                    <span className="mr-2">🦊</span>
-                    MetaMask / Injected
-                  </button>
-                  <button
-                    className="w-full py-2 px-3 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center text-black"
-                    onClick={() => connectWithWallet(2)} // Coinbase Wallet
-                  >
-                    <span className="mr-2">💰</span>
-                    Coinbase Wallet
-                  </button>
-                </div>
-                <button
-                  className="mt-3 w-full py-2 bg-red-100 hover:bg-red-200 rounded-lg text-red-600"
-                  onClick={() => setShowWalletModal(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
+            <button
+              onClick={() => setMintQuantity(prev => Math.min(10, prev + 1))}
+              disabled={mintQuantity >= 10 || !isConnected}
+              className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-r"
+            >
+              +
+            </button>
+          </div>
         </div>
 
-        {isConnected && (
-          <div className="mb-4">
-            <div className="mb-3">
-              <label className="block text-sm font-medium mb-1">Mint Quantity</label>
-              <div className="flex items-center">
-                <button 
-                  className="px-3 py-1 bg-gray-200 text-black rounded-l-lg hover:bg-gray-300 disabled:opacity-50"
-                  onClick={() => setMintQuantity(prev => Math.max(1, prev - 1))}
-                  disabled={mintQuantity <= 1}
-                >
-                  -
-                </button>
-                <div className="px-4 py-1 bg-gray-100 text-black text-center min-w-[40px]">
-                  {mintQuantity}
-                </div>
-                <button 
-                  className="px-3 py-1 bg-gray-200 text-black rounded-r-lg hover:bg-gray-300"
-                  onClick={() => setMintQuantity(prev => Math.min(10, prev + 1))}
-                >
-                  +
-                </button>
+        <div className="border-t border-gray-200 my-4 pt-4">
+          <div className="flex justify-between items-center">
+            <span className="text-xl font-bold">Total:</span>
+            <div className="text-right">
+              <div className="text-xl font-bold">
+                ${(mintPriceUSD * mintQuantity).toFixed(2)} USD
               </div>
-              <div className="text-xs mt-1">
-                Cost: {(0.0001 * mintQuantity).toFixed(4)} ETH
+              <div className="text-sm text-gray-500">
+                ({(mintPriceETH * mintQuantity).toFixed(4)} ETH)
               </div>
             </div>
-            
-            <Button
-              onClick={sendTx}
-              disabled={!isConnected || isSendTxPending}
-              isLoading={isSendTxPending}
+          </div>
+        </div>
+      </>
+    );
+  };
+
+  return (
+    <div className="w-full">
+      <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
+        <h1 className="text-2xl font-bold text-center mb-4">{title}</h1>
+        
+        {/* Always show price info in receipt style */}
+        {renderPriceInfo()}
+        
+        {/* Authentication and transaction buttons */}
+        {!isConnected ? (
+          <Button
+            onClick={handleWalletConnection}
+            className="w-full py-3 px-4"
+          >
+            Connect Wallet
+          </Button>
+        ) : (
+          <Button
+            onClick={sendTx}
+            disabled={!isConnected || isSendTxPending}
+            isLoading={isSendTxPending}
+            className="w-full"
+          >
+            Back this project
+          </Button>
+        )}
+        
+        {/* Error messages */}
+        {isSendTxError && renderError(sendTxError)}
+        {isSwitchChainError && renderError(switchChainError)}
+        
+        {/* Transaction status */}
+        {txHash && (
+          <div className="mt-4 p-3 bg-green-100 text-green-800 rounded-md">
+            <p>Transaction sent!</p>
+            <a
+              href={`https://basescan.org/tx/${txHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline break-all text-xs"
             >
-              Mint {mintQuantity > 1 ? `${mintQuantity} NFTs` : 'NFT'}
-            </Button>
-            {isSendTxError && renderError(sendTxError)}
-            {isSwitchChainError && renderError(switchChainError)}
-            {txHash && (
-              <div className="mt-2 text-xs">
-                <div>Hash: {truncateAddress(txHash)}</div>
-                <div>
-                  Status:{" "}
-                  {isConfirming
-                    ? "Confirming..."
-                    : isConfirmed
-                    ? "Confirmed!"
-                    : "Pending"}
-                </div>
-              </div>
-            )}
+              View on BaseScan: {truncateAddress(txHash)}
+            </a>
+            <div className="text-xs mt-1">
+              Status:{" "}
+              {isConfirming
+                ? "Confirming..."
+                : isConfirmed
+                ? "Confirmed!"
+                : "Pending"}
+            </div>
           </div>
         )}
       </div>

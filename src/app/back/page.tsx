@@ -131,17 +131,12 @@ const Project = () => {
         const balance = await provider.getBalance(NFT_CONTRACT_ADDRESS);
         const balanceInEth = parseFloat(ethers.formatEther(balance));
 
-        // Fetch ETH price
-        const response = await fetch(
-          "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
-        );
-        const data = await response.json();
-
-        if (data?.ethereum?.usd) {
-          // Calculate USD value
-          const valueInUsd = balanceInEth * data.ethereum.usd;
-          setContractValue(valueInUsd);
-        }
+        // Use fixed ETH price of $1800
+        const ethPrice = 1800.76;
+        
+        // Calculate USD value
+        const valueInUsd = balanceInEth * ethPrice;
+        setContractValue(valueInUsd);
 
         // Create a contract instance to fetch total mints
         // This is a minimal ABI with just the totalSupply function
@@ -571,9 +566,9 @@ const Project = () => {
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center md:flex-row md:justify-center md:items-start md:gap-12">
             <div className="flex flex-col justify-center mb-6 md:mb-0 md:w-96">
-              <div className="text-left font-bold text-lg mb-2">
+              {/* <div className="text-left font-bold text-lg mb-2">
                 Access Pass to Version 1
-              </div>
+              </div> */}
               {/* <div className="relative w-full rounded-xl flex items-center justify-center">
                 <img
                   src="/quote7.png"

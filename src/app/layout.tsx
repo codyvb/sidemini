@@ -30,9 +30,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "sidequest.build",
     images: ["./card.png"],
-  },
-  other: {
-    'fc:frame': '{"version":"next","imageUrl":"https://mini.sidequest.build/fox.png","aspectRatio":"3:2","button":{"title":"launch sidequest","action":{"type":"launch_frame","name":"launch","url":"https://mini.sidequest.build","splashImageUrl":"https://mini.sidequest.build/card.png","splashBackgroundColor":"#000000"}}}'
   }
 };
 
@@ -46,6 +43,9 @@ export default async function RootLayout({
   
   return (
     <html lang="en">
+      <head>
+        <meta name="fc:frame" content='{"version":"next","imageUrl":"https://mini.sidequest.build/fox.png","aspectRatio":"3:2","button":{"title":"launch sidequest","action":{"type":"launch_frame","name":"launch","url":"https://mini.sidequest.build","splashImageUrl":"https://mini.sidequest.build/card.png","splashBackgroundColor":"#000000"}}}' />
+      </head>
       <body className="overscroll-none">
         <Providers session={session}>
           <Header />

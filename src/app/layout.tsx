@@ -31,9 +31,12 @@ export const metadata: Metadata = {
     title: "sidequest.build",
     images: ["./card.png"],
   },
+  // Add custom meta tags
+  other: {
+    'fc:frame': '{"version":"next","imageUrl":"https://www.sidequest.build/card.png","button":{"title":"Launch Sidequest","action":{"type":"launch_frame","name":"Sidequest","splashImageUrl":"https://www.sidequest.build/card.png","splashBackgroundColor":"#f7f7f7","url":"https://www.mini.sidequest.build"}}}'
+  },
 };
 
-<meta name='fc:frame' content='{"version":"next","imageUrl":"https://www.sidequest.build/card.png","button":{"title":"Launch Sidequest","action":{"type":"launch_frame","name":"Sidequest","splashImageUrl":"https://www.sidequest.build/card.png","splashBackgroundColor":"#f7f7f7","url":"https://www.mini.sidequest.build"}}}' />
 
 export default async function RootLayout({
   children,

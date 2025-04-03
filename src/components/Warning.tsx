@@ -33,11 +33,8 @@ const Warning: React.FC = () => {
                 Sidequests can fail.
               </h2>
               <p className="text-black/80">
-                You are supporting an ambitious creative project that has yet to
-                be developed. It&apos;s important to consider that, despite a
-                creator&apos;s efforts, there&apos;s a risk that your reward may
-                not be fulfilled. We urge you to consider this risk prior to
-                pledging.
+              You are supporting a creative project that is in development. There is always a risk that a reward could not be fulfilled.
+
               </p>
             </div>
           </div>

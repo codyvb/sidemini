@@ -303,7 +303,7 @@ export default function Demo(
           </button>
 
           {isContextOpen && (
-            <div className="p-4 mt-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+            <div className="p-4 mt-2 bg-netural-900 dark:bg-gray-800 rounded-lg">
               <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
                 {JSON.stringify(context, null, 2)}
               </pre>
@@ -315,7 +315,7 @@ export default function Demo(
           <h2 className="font-2xl font-bold">Actions</h2>
 
           <div className="mb-4">
-            <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg my-2">
+            <div className="p-2 bg-netural-900 dark:bg-gray-800 rounded-lg my-2">
               <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
                 sdk.actions.signIn
               </pre>
@@ -324,7 +324,7 @@ export default function Demo(
           </div>
 
           <div className="mb-4">
-            <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg my-2">
+            <div className="p-2 bg-netural-900 dark:bg-gray-800 rounded-lg my-2">
               <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
                 sdk.actions.openUrl
               </pre>
@@ -333,7 +333,7 @@ export default function Demo(
           </div>
 
           <div className="mb-4">
-            <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg my-2">
+            <div className="p-2 bg-netural-900 dark:bg-gray-800 rounded-lg my-2">
               <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
                 sdk.actions.openUrl
               </pre>
@@ -342,7 +342,7 @@ export default function Demo(
           </div>
 
           <div className="mb-4">
-            <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg my-2">
+            <div className="p-2 bg-netural-900 dark:bg-gray-800 rounded-lg my-2">
               <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
                 sdk.actions.viewProfile
               </pre>
@@ -351,7 +351,7 @@ export default function Demo(
           </div>
 
           <div className="mb-4">
-            <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg my-2">
+            <div className="p-2 bg-netural-900 dark:bg-gray-800 rounded-lg my-2">
               <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
                 sdk.actions.close
               </pre>
@@ -363,7 +363,7 @@ export default function Demo(
         <div className="mb-4">
           <h2 className="font-2xl font-bold">Last event</h2>
 
-          <div className="p-4 mt-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+          <div className="p-4 mt-2 bg-netural-900 dark:bg-gray-800 rounded-lg">
             <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
               {lastEvent || "none"}
             </pre>
@@ -382,7 +382,7 @@ export default function Demo(
           </div>
 
           <div className="mb-4">
-            <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg my-2">
+            <div className="p-2 bg-netural-900 dark:bg-gray-800 rounded-lg my-2">
               <pre className="font-mono text-xs whitespace-pre-wrap break-words max-w-[260px] overflow-x-">
                 sdk.actions.addFrame
               </pre>
@@ -654,7 +654,7 @@ function SignIn() {
         </Button>
       )}
       {session && (
-        <div className="my-2 p-2 text-xs overflow-x-scroll bg-gray-100 rounded-lg font-mono">
+        <div className="my-2 p-2 text-xs overflow-x-scroll bg-netural-900 rounded-lg font-mono">
           <div className="font-semibold text-gray-500 mb-1">Session</div>
           <div className="whitespace-pre">
             {JSON.stringify(session, null, 2)}
@@ -662,13 +662,13 @@ function SignIn() {
         </div>
       )}
       {signInFailure && !signingIn && (
-        <div className="my-2 p-2 text-xs overflow-x-scroll bg-gray-100 rounded-lg font-mono">
+        <div className="my-2 p-2 text-xs overflow-x-scroll bg-netural-900 rounded-lg font-mono">
           <div className="font-semibold text-gray-500 mb-1">SIWF Result</div>
           <div className="whitespace-pre">{signInFailure}</div>
         </div>
       )}
       {signInResult && !signingIn && (
-        <div className="my-2 p-2 text-xs overflow-x-scroll bg-gray-100 rounded-lg font-mono">
+        <div className="my-2 p-2 text-xs overflow-x-scroll bg-netural-900 rounded-lg font-mono">
           <div className="font-semibold text-gray-500 mb-1">SIWF Result</div>
           <div className="whitespace-pre">
             {JSON.stringify(signInResult, null, 2)}

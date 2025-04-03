@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     images: ["./card.png"],
   },
   other: {
-    'fc:frame': '{"version":"next","imageUrl":"https://www.sidequest.build/card.png","button":{"title":"Launch Sidequest","action":{"type":"launch_frame","name":"Sidequest","splashImageUrl":"https://www.sidequest.build/card.png","splashBackgroundColor":"#f7f7f7","url":"https://www.mini.sidequest.build"}}}'
+    'fc:frame': '{"version":"next","imageUrl":"https://www.sidequest.build/fox.png","button":{"title":"Launch Sidequest","action":{"type":"launch_frame","name":"Sidequest","splashImageUrl":"https://www.sidequest.build/card.png","splashBackgroundColor":"#f7f7f7","url":"https://mini.sidequest.build"}},"aspectRatio":"3:2"}'
   }
 };
 

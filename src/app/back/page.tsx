@@ -274,8 +274,8 @@ const Project = () => {
                 <div className="relative mx-0">
                   <div className="relative w-full h-[70vh] bg-black overflow-hidden">
                     {/* DEMO label */}
-                    <div className="absolute top-4 left-4 z-10 bg-opacity-80 px-3 py-1 rounded-md">
-                      <span className="font-bold bg-white p-2 rounded-md text-black">DEMO</span>
+                    <div className="absolute top-6 left-4 z-10 bg-opacity-80  py-1 rounded-md">
+                      <span className="font-bold bg-white p-2 rounded-xl text-black">DEMO</span>
                     </div>
                     <div className="absolute inset-0">
                       {/* Background image removed as video autoplays */}
@@ -285,7 +285,7 @@ const Project = () => {
                         id="main-video"
                         ref={videoRef}
                         className="absolute inset-0 w-full h-full object-cover"
-                        src="/loom.mp4"
+                        src="/thing2.mov"
                         playsInline
                         preload="auto"
                         autoPlay

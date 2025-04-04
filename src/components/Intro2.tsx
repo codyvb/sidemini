@@ -445,14 +445,18 @@ export default function Demo(
                   pauseOnHover
                   className="text-neutral-400 text-sm"
                 >
-                  <span className="mx-1">dan</span>
-                  <span className="mx-1">jon</span>
-                  <span className="mx-1">bo</span>
+
+                  <span className="mx-1">jonbo.eth</span>
                   <span className="mx-1">codyb.eth</span>
-                  <span className="mx-1">dan</span>
-                  <span className="mx-1">jon</span>
-                  <span className="mx-1">bo</span>
+                  <span className="mx-1">jesse.base.eth</span>
+                  <span className="mx-1">@rev</span>
+                  <span className="mx-1">@cryptonight</span>
+                  <span className="mx-1">jonbo.eth</span>
                   <span className="mx-1">codyb.eth</span>
+                  <span className="mx-1">jesse.base.eth</span>
+                  <span className="mx-1">@rev</span>
+                  <span className="mx-1">@cryptonight</span>
+
                 </Marquee>
               </div>
             </div>

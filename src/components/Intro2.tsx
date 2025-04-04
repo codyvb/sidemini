@@ -319,7 +319,7 @@ export default function Demo(
         {/* Space Animation Background - positioned absolutely to cover the top portion */}
         <div className="absolute inset-0 w-full h-full">
           <SpaceAnimation
-            imagePaths={["/moon.png", "/scroll.png", "/scroll2.png", "/mars.png"]}
+            imagePaths={["/moon.png", "/scroll.png", "/scroll2.png", "/mars.png", "/farcaster.png"]}
           />
         </div>
         

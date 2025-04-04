@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     description: "back the build",
     images: [
       {
-        url: "./card.png",
+        url: "./card7.png",
         width: 1200,
         height: 630,
         alt: "",

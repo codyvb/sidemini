@@ -423,13 +423,13 @@ export default function Demo(
               
               <div className="grid grid-cols-2 gap-3">
                 <a
-                  href="/about"
+                  href="/learn"
                   className="text-neutral-300 text-center bg-neutral-800 bg-opacity-80 backdrop-blur-sm px-4 py-3 rounded-lg text-base font-medium hover:bg-neutral-700 transition-colors w-full"
                 >
                   Learn More
                 </a>
                 <a
-                  href="/devs"
+                  href="/pitch"
                   className="text-neutral-300 text-center bg-neutral-800 bg-opacity-80 backdrop-blur-sm px-4 py-3 rounded-lg text-base font-medium hover:bg-neutral-700 transition-colors w-full"
                 >
                   Pitch a Project

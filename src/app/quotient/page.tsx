@@ -31,6 +31,7 @@ const Project = () => {
   const [backersCount, setBackersCount] = useState(17); // Default based on known wallets
   const [walletMintCounts, setWalletMintCounts] = useState<Array<{address: string, count: number, farcaster?: {username: string, pfpUrl: string, accountUrl: string, fid: number}}>>([]);
   const [isLoadingWallets, setIsLoadingWallets] = useState(true);
+  const [hasMinted, setHasMinted] = useState(false);
   
   // Farcaster user data mapping
   const farcasterUserData: Record<string, { username: string, pfpUrl: string, accountUrl: string, fid: number }> = {
@@ -623,7 +624,37 @@ const Project = () => {
             </div>
             
             <div className="w-full md:w-auto md:max-w-md">
-              <Mint />
+              <Mint onMintSuccess={() => setHasMinted(true)} />
+
+                {/* Share on Farcaster section - only shown after successful mint */}
+                {hasMinted && (
+                    <div className="mt-8 bg-purple-50 p-6 rounded-lg border border-purple-200">
+                      <button
+                        onClick={() => {
+                          const castText = "I just backed @Quotient on Sidequest. Support the crowdfund here: https://mini.sidequest.build/quotient";
+                          const encodedText = encodeURIComponent(castText);
+                          
+                          try {
+                            // Check if we're in a Farcaster environment
+                            if (typeof sdk !== 'undefined' && sdk.actions) {
+                              // The SDK in this version doesn't have composeCast, so we use openUrl to the compose endpoint
+                              sdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodedText}`);
+                              console.log('Cast composition triggered via Farcaster SDK');
+                            } else {
+                              throw new Error('Farcaster SDK not available');
+                            }
+                          } catch (error) {
+                            console.error('Error opening cast composer:', error);
+                            // Fallback for non-Farcaster environments
+                            window.open(`https://warpcast.com/~/compose?text=${encodedText}`, '_blank');
+                          }
+                        }}
+                        className="w-full bg-purple-700 text-white py-3 px-4 rounded-md font-medium hover:bg-purple-800 transition-colors flex items-center justify-center gap-2"
+                      >
+                        Share on Farcaster
+                      </button>
+                    </div>
+                  )}
               
               {/* Flex container to control order on mobile */}
               <div className="flex flex-col mt-8">
@@ -715,34 +746,7 @@ const Project = () => {
                     </div>
                   )}
                   
-                  {/* Raw addresses section */}
-                  {walletMintCounts.length > 0 && (
-                    <div className="mt-6">
-                      <details className="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
-                        <summary className="px-4 py-3 cursor-pointer text-sm font-medium text-gray-700 hover:text-purple-700 transition-colors">
-                          View raw addresses
-                        </summary>
-                        <div className="p-4 bg-gray-50 border-t border-gray-200">
-                          <textarea 
-                            readOnly 
-                            className="w-full h-32 p-2 text-xs font-mono bg-white border border-gray-200 rounded-lg" 
-                            value={walletMintCounts.map(wallet => wallet.address).join('\n')}
-                          />
-                          <div className="mt-2 flex justify-end">
-                            <button
-                              onClick={() => {
-                                navigator.clipboard.writeText(walletMintCounts.map(wallet => wallet.address).join('\n'));
-                                alert('Addresses copied to clipboard');
-                              }}
-                              className="text-xs bg-white text-purple-700 border border-purple-700 px-3 py-1 rounded hover:bg-purple-50 transition-colors"
-                            >
-                              Copy to clipboard
-                            </button>
-                          </div>
-                        </div>
-                      </details>
-                    </div>
-                  )}
+  
                 </div>
                 
                 {/* Warning section */}
@@ -756,7 +760,7 @@ const Project = () => {
       </section>
       <div className="h-[200px]"></div>
 
-      <section className="w-full py-16 border-t border-neutral-200 mt-12">
+      {/* <section className="w-full py-16 border-t border-neutral-200 mt-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
           <div className="text-center">
             <h2 className="text-4xl font-bold mb-6">Follow Quotient on Warpcast</h2>
@@ -770,7 +774,7 @@ const Project = () => {
             </a>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <div className="h-[100px]"></div>
 

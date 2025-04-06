@@ -35,7 +35,7 @@ type FarcasterContext = {
   };
 };
 
-export default function Demo({ title }: { title?: string } = { title: "Mint Demo" }) {
+export default function Demo({ title, onMintSuccess }: { title?: string, onMintSuccess?: () => void } = { title: "Mint Demo" }) {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [context, setContext] = useState<FarcasterContext | null>(null);
   const [isInFarcaster, setIsInFarcaster] = useState<boolean | null>(null);
@@ -308,7 +308,13 @@ export default function Demo({ title }: { title?: string } = { title: "Mint Demo
               {isConfirming
                 ? "Confirming..."
                 : isConfirmed
-                ? "Confirmed!"
+                ? (() => {
+                    // Call the onMintSuccess callback if provided
+                    if (onMintSuccess && typeof onMintSuccess === 'function') {
+                      onMintSuccess();
+                    }
+                    return "Confirmed!";
+                  })()
                 : "Pending"}
             </div>
           </div>

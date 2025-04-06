@@ -10,7 +10,7 @@ const frame = {
     action: {
       type: "launch_frame",
       name: "Sidequest",
-      url: "https://mini.sidequest.build/back",
+      url: "https://mini.sidequest.build/quotient",
       splashImageUrl: "https://mini.sidequest.build/goldcard.png",
       splashBackgroundColor: "#000000",
     },

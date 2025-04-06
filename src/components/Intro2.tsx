@@ -415,7 +415,7 @@ export default function Demo(
           <div className="w-full sm:w-[90%] mx-auto mt-auto">
             <div className="grid grid-cols-1 gap-3 mb-4">
               <a
-                href="back"
+                href="/quotient"
                 className="text-white border text-center border-purple-700 bg-purple-800 bg-opacity-90 backdrop-blur-sm px-4 py-3 rounded-lg text-lg font-medium hover:bg-purple-700 transition-colors w-full"
               >
                 <div className="animate-pulse">Checkout Project #1</div>

@@ -608,57 +608,64 @@ const Project = () => {
             
             <div className="w-full md:w-auto md:max-w-md">
               <Mint />
-              <Warning />
               
-              {/* Minters section - displays wallets that have minted NFTs */}
-              <div id="backers-section" className="mt-8">
-                <h3 className="text-xl font-bold mb-4">Current NFT Holders <span className="text-sm font-normal text-gray-600">({walletMintCounts.length} unique wallets)</span></h3>
-                
-                {isLoadingWallets ? (
-                  <div className="flex justify-center items-center py-6">
-                    <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-purple-700"></div>
-                  </div>
-                ) : walletMintCounts.length > 0 ? (
-                  <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                    <ul className="divide-y divide-gray-200">
-                      {walletMintCounts.map((wallet, index) => (
-                        <li key={index} className="px-4 py-3 flex items-center justify-between hover:bg-gray-50">
-                          <div className="flex items-center">
-                            <a 
-                              href={`https://basescan.org/address/${wallet.address}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-sm font-medium text-gray-900 hover:text-purple-700 transition-colors"
+              {/* Flex container to control order on mobile */}
+              <div className="flex flex-col mt-8">
+                {/* Minters section - displays wallets that have minted NFTs */}
+                <div id="backers-section" className="order-first md:order-none mb-8">
+                  <h3 className="text-xl font-bold mb-4">Current NFT Holders <span className="text-sm font-normal text-gray-600">({walletMintCounts.length} unique wallets)</span></h3>
+                  
+                  {isLoadingWallets ? (
+                    <div className="flex justify-center items-center py-6">
+                      <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-purple-700"></div>
+                    </div>
+                  ) : walletMintCounts.length > 0 ? (
+                    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                      <ul className="divide-y divide-gray-200">
+                        {walletMintCounts.map((wallet, index) => (
+                          <li key={index} className="px-4 py-3 flex items-center justify-between hover:bg-gray-50">
+                            <div className="flex items-center">
+                              <a 
+                                href={`https://basescan.org/address/${wallet.address}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm font-medium text-gray-900 hover:text-purple-700 transition-colors"
+                              >
+                                {wallet.address.substring(0, 6)}...{wallet.address.substring(wallet.address.length - 4)}
+                              </a>
+                              <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                {wallet.count} {wallet.count === 1 ? 'NFT' : 'NFTs'}
+                              </span>
+                            </div>
+                            <svg 
+                              xmlns="http://www.w3.org/2000/svg" 
+                              className="h-4 w-4 text-gray-400" 
+                              fill="none" 
+                              viewBox="0 0 24 24" 
+                              stroke="currentColor"
                             >
-                              {wallet.address.substring(0, 6)}...{wallet.address.substring(wallet.address.length - 4)}
-                            </a>
-                            <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                              {wallet.count} {wallet.count === 1 ? 'NFT' : 'NFTs'}
-                            </span>
-                          </div>
-                          <svg 
-                            xmlns="http://www.w3.org/2000/svg" 
-                            className="h-4 w-4 text-gray-400" 
-                            fill="none" 
-                            viewBox="0 0 24 24" 
-                            stroke="currentColor"
-                          >
-                            <path 
-                              strokeLinecap="round" 
-                              strokeLinejoin="round" 
-                              strokeWidth={1.5} 
-                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" 
-                            />
-                          </svg>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : (
-                  <div className="text-center py-6 bg-gray-50 rounded-lg">
-                    <p className="text-gray-500">No backer data available</p>
-                  </div>
-                )}
+                              <path 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                strokeWidth={1.5} 
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" 
+                              />
+                            </svg>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : (
+                    <div className="text-center py-6 bg-gray-50 rounded-lg">
+                      <p className="text-gray-500">No backer data available</p>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Warning section */}
+                <div className="order-last md:order-none">
+                  <Warning />
+                </div>
               </div>
             </div>
           </div>

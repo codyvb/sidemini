@@ -14,8 +14,30 @@ const Project = () => {
   // Initial state with reasonable defaults to avoid loading flicker
   const [contractValue, setContractValue] = useState(432); // Default value from screenshot
   const [backersCount, setBackersCount] = useState(17); // Default based on known wallets
-  const [walletMintCounts, setWalletMintCounts] = useState<Array<{address: string, count: number}>>([]);
+  const [walletMintCounts, setWalletMintCounts] = useState<Array<{address: string, count: number, farcaster?: {username: string, pfpUrl: string, accountUrl: string}}>>([]);
   const [isLoadingWallets, setIsLoadingWallets] = useState(true);
+  
+  // Farcaster user data mapping
+  const farcasterUserData: Record<string, { username: string, pfpUrl: string, accountUrl: string }> = {
+    "0xb68a6a83cfca2e7fde2aa5749b85e753f55d58cd": { username: "sky", pfpUrl: "https://i.imgur.com/g7qWYhr.png", accountUrl: "https://warpcast.com/sky" },
+    "0x461337d4f089adf16455acb785415f6437da0c24": { username: "cryptonight", pfpUrl: "https://i.imgur.com/CuGTXcz.jpg", accountUrl: "https://warpcast.com/cryptonight" },
+    "0x292ff025168d2b51f0ef49f164d281c36761ba2b": { username: "jonbo", pfpUrl: "https://i.imgur.com/zXst9SS.jpg", accountUrl: "https://warpcast.com/jonbo" },
+    "0x2211d1d0020daea8039e46cf1367962070d77da9": { username: "jessepollak", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/1013b0f6-1bf4-4f4e-15fb-34be06fede00/original", accountUrl: "https://warpcast.com/jessepollak" },
+    "0x30ac71b1a1b0384c4c8b17e87d863cc4a2f3db28": { username: "kompreni", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/987efd90-4c51-44b5-203f-0c169a7c7f00/original", accountUrl: "https://warpcast.com/kompreni" },
+    "0x40ff52e1848660327f16ed96a307259ec1d757eb": { username: "codyb.eth", pfpUrl: "https://i.imgur.com/AgwTmur.jpg", accountUrl: "https://warpcast.com/codyb.eth" },
+    "0x4a8d22cf7337be2f4d9c93d01b2893334d2438be": { username: "50cal-eth", pfpUrl: "https://i.imgur.com/fEAIqRk.jpg", accountUrl: "https://warpcast.com/50cal-eth" },
+    "0x5e349eca2dc61abcd9dd99ce94d04136151a09ee": { username: "linda", pfpUrl: "https://i.seadn.io/gae/r6CW_kgQygQhI7-4JdWt_Nbf_bjFNnEM7dSns1nZGrijJvUMaLnpAFuBLwjsHXTkyX8zfgpRJCYibtm7ojeA2_ASQwSJgh7yKEFVMOI?w=500&auto=format", accountUrl: "https://warpcast.com/linda" },
+    "0x69dc230b06a15796e3f42baf706e0e55d4d5eaa1": { username: "rev", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/7bea0f51-169f-4b94-dde9-e77f85965300/original", accountUrl: "https://warpcast.com/rev" },
+    "0x6f526d0b48332036094af3c4beabe49db175ff2a": { username: "nelsonrodmar", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/7ab9d214-a351-4460-9c81-3c3e1006be00/original", accountUrl: "https://warpcast.com/nelsonrodmar" },
+    "0x8610f2d0e04b9926396a99f464c46fabcde942fc": { username: "alexpaden", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/d1754d75-49dd-4901-de4b-4283bb354b00/rectcrop3", accountUrl: "https://warpcast.com/alexpaden" },
+    "0x8cdb37ac91e2faf80c002fcf81a1165277388474": { username: "lowshot", pfpUrl: "https://i.imgur.com/9S4iCKo.png", accountUrl: "https://warpcast.com/lowshot" },
+    "0xa32ad653ddb29aafaf67ca906f7bcee145444746": { username: "srijan.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/34aab6e6-015f-4363-98c4-a4abafecb800/rectcrop3", accountUrl: "https://warpcast.com/srijan.eth" },
+    "0xac1c4bed1c7c71fd3afde11e2bd4f18d969c843d": { username: "metaend.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/d94ed04c-8a86-4a23-3262-298016411500/original", accountUrl: "https://warpcast.com/metaend.eth" },
+    "0xceab0087c5fbc22fb19293bd0be5fa9b23789da9": { username: "garrett", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/0c7261ad-bc68-4a09-f24a-28a076cc7500/rectcrop3", accountUrl: "https://warpcast.com/garrett" },
+    "0xda0ff93b971afac130fbb639ca8bf1e69d7915e9": { username: "gweiwhale.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/9d010922-8f9a-4421-af19-9e783c3dd600/rectcrop3", accountUrl: "https://warpcast.com/gweiwhale.eth" },
+    "0xe594469fde6ae29943a64f81d95c20f5f8eb2e04": { username: "paulofonseca", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/752dae94-1d61-4304-8ee4-dc7345babf00/rectcrop3", accountUrl: "https://warpcast.com/paulofonseca" },
+    "0xd5aefe935dfc9360945115dde8da98b596dfbb9f": { username: "lior", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/f2641cdd-906e-4cdd-ca3e-845ae2dfc900/original", accountUrl: "https://warpcast.com/lior" },
+  };
 
   const [isLoading, setIsLoading] = useState(false); // Start with false to show initial values
   const [expandedFaqs, setExpandedFaqs] = useState<Record<string, boolean>>({});
@@ -130,13 +152,33 @@ const Project = () => {
   useEffect(() => {
     const fetchWalletMintCounts = async () => {
       try {
-        const NFT_CONTRACT_ADDRESS = "0xc049e891b0542414ead02223b1b70e0bc99d1511";
         setIsLoadingWallets(true);
         
+        const NFT_CONTRACT_ADDRESS = "0xc049e891b0542414ead02223b1b70e0bc99d1511";
         const { wallets, error } = await getWalletMintCounts(NFT_CONTRACT_ADDRESS);
         
         if (!error && wallets.length > 0) {
-          setWalletMintCounts(wallets);
+          // Add Farcaster data to wallets
+          const walletsWithFarcaster = wallets.map(wallet => {
+            const normalizedAddress = wallet.address.toLowerCase();
+            const farcasterInfo = farcasterUserData[normalizedAddress];
+            
+            return {
+              ...wallet,
+              farcaster: farcasterInfo
+            };
+          });
+          
+          // Sort wallets: first by those with Farcaster profiles, then by count
+          const sortedWallets = walletsWithFarcaster.sort((a, b) => {
+            // First sort by whether they have a Farcaster profile
+            if (a.farcaster && !b.farcaster) return -1;
+            if (!a.farcaster && b.farcaster) return 1;
+            // Then sort by count (highest first)
+            return b.count - a.count;
+          });
+          
+          setWalletMintCounts(sortedWallets);
           // Update backers count to reflect the number of unique wallet holders
           setBackersCount(wallets.length);
         } else {
@@ -244,14 +286,14 @@ const Project = () => {
       {showBackButton && (
         <>
           {/* Bottom gradient */}
-          <div className="fixed bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent z-40"></div>
+          <div className="fixed bottom-0 left-0 right-0 h-[200px] bg-gradient-to-t from-white to-transparent z-40"></div>
           
           {/* Button container */}
           <div className="fixed bottom-6 left-0 right-0 z-50 flex flex-col items-center px-4 sm:px-6 w-full max-w-md mx-auto pointer-events-none">
             {/* Back this project button */}
             <button
               onClick={scrollToMintSection}
-              className="bg-purple-700 text-white py-3 px-8 rounded-md font-medium hover:bg-purple-800 transition-colors shadow-lg pointer-events-auto w-full"
+              className="bg-purple-700 text-white py-3 px-8 rounded-lg font-medium hover:bg-purple-800 transition-colors shadow-lg pointer-events-auto w-full"
             >
               Back this project
             </button>
@@ -613,7 +655,9 @@ const Project = () => {
               <div className="flex flex-col mt-8">
                 {/* Minters section - displays wallets that have minted NFTs */}
                 <div id="backers-section" className="order-first md:order-none mb-8">
-                  <h3 className="text-xl font-bold mb-4">Current NFT Holders <span className="text-sm font-normal text-gray-600">({walletMintCounts.length} unique wallets)</span></h3>
+                  <h3 className="text-xl font-bold mb-4">Backers
+                     {/* <span className="text-sm font-normal text-gray-600">({walletMintCounts.length} unique wallets)</span> */}
+                     </h3>
                   
                   {isLoadingWallets ? (
                     <div className="flex justify-center items-center py-6">
@@ -625,32 +669,66 @@ const Project = () => {
                         {walletMintCounts.map((wallet, index) => (
                           <li key={index} className="px-4 py-3 flex items-center justify-between hover:bg-gray-50">
                             <div className="flex items-center">
-                              <a 
-                                href={`https://basescan.org/address/${wallet.address}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm font-medium text-gray-900 hover:text-purple-700 transition-colors"
-                              >
-                                {wallet.address.substring(0, 6)}...{wallet.address.substring(wallet.address.length - 4)}
-                              </a>
+                              {wallet.farcaster ? (
+                                <>
+                                  <a 
+                                    href={wallet.farcaster.accountUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center group"
+                                  >
+                                    <div className="w-8 h-8 rounded-full overflow-hidden mr-3 border border-gray-200">
+                                      <img 
+                                        src={wallet.farcaster.pfpUrl} 
+                                        alt={wallet.farcaster.username} 
+                                        className="w-full h-full object-cover"
+                                      />
+                                    </div>
+                                    <div>
+                                      <span className="text-sm font-medium text-gray-900 group-hover:text-purple-700 transition-colors">
+                                        {wallet.farcaster.username}
+                                      </span>
+                                      <div className="text-xs text-gray-500">
+                                        {wallet.address.substring(0, 6)}...{wallet.address.substring(wallet.address.length - 4)}
+                                      </div>
+                                    </div>
+                                  </a>
+                                </>
+                              ) : (
+                                <a 
+                                  href={`https://basescan.org/address/${wallet.address}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-sm font-medium text-gray-900 hover:text-purple-700 transition-colors"
+                                >
+                                  {wallet.address.substring(0, 6)}...{wallet.address.substring(wallet.address.length - 4)}
+                                </a>
+                              )}
                               <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                {wallet.count} {wallet.count === 1 ? 'NFT' : 'NFTs'}
+                                {wallet.count} {wallet.count === 1 ? 'mint' : 'mints'}
                               </span>
                             </div>
-                            <svg 
-                              xmlns="http://www.w3.org/2000/svg" 
-                              className="h-4 w-4 text-gray-400" 
-                              fill="none" 
-                              viewBox="0 0 24 24" 
-                              stroke="currentColor"
+                            <a 
+                              href={wallet.farcaster ? wallet.farcaster.accountUrl : `https://basescan.org/address/${wallet.address}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-gray-400 hover:text-purple-700"
                             >
-                              <path 
-                                strokeLinecap="round" 
-                                strokeLinejoin="round" 
-                                strokeWidth={1.5} 
-                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" 
-                              />
-                            </svg>
+                              <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                className="h-4 w-4" 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                stroke="currentColor"
+                              >
+                                <path 
+                                  strokeLinecap="round" 
+                                  strokeLinejoin="round" 
+                                  strokeWidth={1.5} 
+                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" 
+                                />
+                              </svg>
+                            </a>
                           </li>
                         ))}
                       </ul>
@@ -658,6 +736,35 @@ const Project = () => {
                   ) : (
                     <div className="text-center py-6 bg-gray-50 rounded-lg">
                       <p className="text-gray-500">No backer data available</p>
+                    </div>
+                  )}
+                  
+                  {/* Raw addresses section */}
+                  {walletMintCounts.length > 0 && (
+                    <div className="mt-6">
+                      <details className="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+                        <summary className="px-4 py-3 cursor-pointer text-sm font-medium text-gray-700 hover:text-purple-700 transition-colors">
+                          View raw addresses
+                        </summary>
+                        <div className="p-4 bg-gray-50 border-t border-gray-200">
+                          <textarea 
+                            readOnly 
+                            className="w-full h-32 p-2 text-xs font-mono bg-white border border-gray-200 rounded-lg" 
+                            value={walletMintCounts.map(wallet => wallet.address).join('\n')}
+                          />
+                          <div className="mt-2 flex justify-end">
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(walletMintCounts.map(wallet => wallet.address).join('\n'));
+                                alert('Addresses copied to clipboard');
+                              }}
+                              className="text-xs bg-white text-purple-700 border border-purple-700 px-3 py-1 rounded hover:bg-purple-50 transition-colors"
+                            >
+                              Copy to clipboard
+                            </button>
+                          </div>
+                        </div>
+                      </details>
                     </div>
                   )}
                 </div>

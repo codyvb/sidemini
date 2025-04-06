@@ -631,7 +631,7 @@ const Project = () => {
                     <div className="mt-8 bg-purple-50 p-6 rounded-lg border border-purple-200">
                       <button
                         onClick={() => {
-                          const castText = "I just backed @Quotient on Sidequest. Support the crowdfund here: https://mini.sidequest.build/quotient";
+                          const castText = "I just backed Quotient on Sidequest. Back the app here: https://mini.sidequest.build/quotient";
                           const encodedText = encodeURIComponent(castText);
                           
                           try {

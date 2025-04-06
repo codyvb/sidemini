@@ -105,7 +105,7 @@ const Project = () => {
   // Sample project data (in a real app, this would come from an API or props)
   const project = {
     title: "Quotient",
-    description: "Deep Research for people building onchain",
+    description: "Power tools for builders on farcaster",
     creator: "Jordan Olmstead",
     location: "Brooklyn, NY",
     category: "Software",
@@ -431,7 +431,7 @@ const Project = () => {
           <div>
             <h2 className="text-2xl font-bold mb-4">Story</h2>
             <p className="mb-4">
-            We&apos;re building Deep Research for people building onchain. A bridge connecting Farcaster data to other sources relevant to understanding onchain builders and the products they&apos;re working on.
+            We&apos;re building power tools for builders on farcaster. A bridge connecting Farcaster data to other sources relevant to understanding onchain builders and the products they&apos;re working on.
             </p>
             
             <p className="font-bold mb-2">Example queries:</p>

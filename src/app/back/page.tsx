@@ -329,6 +329,37 @@ const Project = () => {
                 Backers
               </button>
             </div>
+            
+            {/* Backers Marquee */}
+            <div className="w-full mt-3 overflow-hidden pointer-events-auto bg-white bg-opacity-90 rounded-md border border-gray-200 py-2">
+              <div className="whitespace-nowrap inline-block animate-marquee">
+                {Object.entries(farcasterUserData).map(([address, user], index) => (
+                  <div key={index} className="inline-flex items-center mx-2" onClick={() => viewFarcasterProfile(user.fid, user.accountUrl)}>
+                    <div className="w-6 h-6 rounded-full overflow-hidden mr-1 border border-gray-200">
+                      <img 
+                        src={user.pfpUrl} 
+                        alt={user.username} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <span className="text-xs font-medium text-gray-900">{user.username}</span>
+                  </div>
+                ))}
+                {/* Duplicate the list for continuous scrolling */}
+                {Object.entries(farcasterUserData).map(([address, user], index) => (
+                  <div key={`dup-${index}`} className="inline-flex items-center mx-2" onClick={() => viewFarcasterProfile(user.fid, user.accountUrl)}>
+                    <div className="w-6 h-6 rounded-full overflow-hidden mr-1 border border-gray-200">
+                      <img 
+                        src={user.pfpUrl} 
+                        alt={user.username} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <span className="text-xs font-medium text-gray-900">{user.username}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </>
       )}

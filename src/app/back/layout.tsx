@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 // Frame metadata defined for the back page only
 const frame = {
   version: "next",
-  imageUrl: "https://mini.sidequest.build/card7.png",
+  imageUrl: "https://mini.sidequest.build/goldcard.png",
   aspectRatio: "3:2",
   button: {
     title: "Back It",
@@ -11,8 +11,8 @@ const frame = {
       type: "launch_frame",
       name: "Sidequest",
       url: "https://mini.sidequest.build/back",
-      splashImageUrl: "https://mini.sidequest.build/card7.png",
-      splashBackgroundColor: "#f7f7f7",
+      splashImageUrl: "https://mini.sidequest.build/goldcard.png",
+      splashBackgroundColor: "#000000",
     },
   },
 };

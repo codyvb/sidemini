@@ -9,34 +9,85 @@ import Mint from "~/components/Mint";
 import { getTokenBalance, getContractMetadata, getNFTTransfers, getNFTCount, getWalletMintCounts } from "~/utils/alchemy";
 
 
+// Function to handle viewing a Farcaster profile - works both in Farcaster app and regular browser
+const viewFarcasterProfile = (fid: number, accountUrl: string) => {
+  // Check if we're in a Farcaster environment
+  const isFarcaster = typeof window !== 'undefined' && 
+    (window.location.hostname.includes('warpcast.com') || 
+     window.location.hostname.includes('farcaster.xyz') ||
+     // Check for Farcaster SDK
+     typeof (window as any).sdk !== 'undefined' ||
+     typeof (window as any).farcaster !== 'undefined');
+  
+  console.log('Environment check:', { 
+    isFarcaster, 
+    hostname: typeof window !== 'undefined' ? window.location.hostname : 'unknown',
+    hasSDK: typeof window !== 'undefined' ? !!(window as any).sdk : false,
+    hasFarcaster: typeof window !== 'undefined' ? !!(window as any).farcaster : false
+  });
+
+  if (isFarcaster) {
+    console.log('Attempting to use Farcaster SDK to view profile with FID:', fid);
+    try {
+      // Try using the SDK from the @farcaster/frame-sdk package
+      if (typeof (window as any).sdk !== 'undefined' && (window as any).sdk.actions && (window as any).sdk.actions.viewProfile) {
+        console.log('Using sdk.actions.viewProfile');
+        (window as any).sdk.actions.viewProfile({ fid });
+        return;
+      }
+      
+      // Try using the farcaster global object
+      if (typeof (window as any).farcaster !== 'undefined' && (window as any).farcaster.viewProfile) {
+        console.log('Using farcaster.viewProfile');
+        (window as any).farcaster.viewProfile({ fid });
+        return;
+      }
+
+      // Fallback to URL scheme for mobile apps
+      const farcasterDeepLink = `https://warpcast.com/~/user/${fid}`;
+      console.log('Using deep link:', farcasterDeepLink);
+      window.location.href = farcasterDeepLink;
+    } catch (error) {
+      console.error('Error using Farcaster SDK:', error);
+      // Fallback to regular URL if SDK fails
+      console.log('Fallback to regular URL:', accountUrl);
+      window.open(accountUrl, '_blank');
+    }
+  } else {
+    // Regular browser environment - open the URL directly
+    console.log('Not in Farcaster environment, opening URL directly:', accountUrl);
+    window.open(accountUrl, '_blank');
+  }
+};
+
 const Project = () => {
   const [activeTab, setActiveTab] = useState("Campaign");
   // Initial state with reasonable defaults to avoid loading flicker
   const [contractValue, setContractValue] = useState(432); // Default value from screenshot
   const [backersCount, setBackersCount] = useState(17); // Default based on known wallets
-  const [walletMintCounts, setWalletMintCounts] = useState<Array<{address: string, count: number, farcaster?: {username: string, pfpUrl: string, accountUrl: string}}>>([]);
+  const [walletMintCounts, setWalletMintCounts] = useState<Array<{address: string, count: number, farcaster?: {username: string, pfpUrl: string, accountUrl: string, fid: number}}>>([]);
   const [isLoadingWallets, setIsLoadingWallets] = useState(true);
   
   // Farcaster user data mapping
-  const farcasterUserData: Record<string, { username: string, pfpUrl: string, accountUrl: string }> = {
-    "0xb68a6a83cfca2e7fde2aa5749b85e753f55d58cd": { username: "sky", pfpUrl: "https://i.imgur.com/g7qWYhr.png", accountUrl: "https://warpcast.com/sky" },
-    "0x461337d4f089adf16455acb785415f6437da0c24": { username: "cryptonight", pfpUrl: "https://i.imgur.com/CuGTXcz.jpg", accountUrl: "https://warpcast.com/cryptonight" },
-    "0x292ff025168d2b51f0ef49f164d281c36761ba2b": { username: "jonbo", pfpUrl: "https://i.imgur.com/zXst9SS.jpg", accountUrl: "https://warpcast.com/jonbo" },
-    "0x2211d1d0020daea8039e46cf1367962070d77da9": { username: "jessepollak", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/1013b0f6-1bf4-4f4e-15fb-34be06fede00/original", accountUrl: "https://warpcast.com/jessepollak" },
-    "0x30ac71b1a1b0384c4c8b17e87d863cc4a2f3db28": { username: "kompreni", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/987efd90-4c51-44b5-203f-0c169a7c7f00/original", accountUrl: "https://warpcast.com/kompreni" },
-    "0x40ff52e1848660327f16ed96a307259ec1d757eb": { username: "codyb.eth", pfpUrl: "https://i.imgur.com/AgwTmur.jpg", accountUrl: "https://warpcast.com/codyb.eth" },
-    "0x4a8d22cf7337be2f4d9c93d01b2893334d2438be": { username: "50cal-eth", pfpUrl: "https://i.imgur.com/fEAIqRk.jpg", accountUrl: "https://warpcast.com/50cal-eth" },
-    "0x5e349eca2dc61abcd9dd99ce94d04136151a09ee": { username: "linda", pfpUrl: "https://i.seadn.io/gae/r6CW_kgQygQhI7-4JdWt_Nbf_bjFNnEM7dSns1nZGrijJvUMaLnpAFuBLwjsHXTkyX8zfgpRJCYibtm7ojeA2_ASQwSJgh7yKEFVMOI?w=500&auto=format", accountUrl: "https://warpcast.com/linda" },
-    "0x69dc230b06a15796e3f42baf706e0e55d4d5eaa1": { username: "rev", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/7bea0f51-169f-4b94-dde9-e77f85965300/original", accountUrl: "https://warpcast.com/rev" },
-    "0x6f526d0b48332036094af3c4beabe49db175ff2a": { username: "nelsonrodmar", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/7ab9d214-a351-4460-9c81-3c3e1006be00/original", accountUrl: "https://warpcast.com/nelsonrodmar" },
-    "0x8610f2d0e04b9926396a99f464c46fabcde942fc": { username: "alexpaden", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/d1754d75-49dd-4901-de4b-4283bb354b00/rectcrop3", accountUrl: "https://warpcast.com/alexpaden" },
-    "0x8cdb37ac91e2faf80c002fcf81a1165277388474": { username: "lowshot", pfpUrl: "https://i.imgur.com/9S4iCKo.png", accountUrl: "https://warpcast.com/lowshot" },
-    "0xa32ad653ddb29aafaf67ca906f7bcee145444746": { username: "srijan.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/34aab6e6-015f-4363-98c4-a4abafecb800/rectcrop3", accountUrl: "https://warpcast.com/srijan.eth" },
-    "0xac1c4bed1c7c71fd3afde11e2bd4f18d969c843d": { username: "metaend.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/d94ed04c-8a86-4a23-3262-298016411500/original", accountUrl: "https://warpcast.com/metaend.eth" },
-    "0xceab0087c5fbc22fb19293bd0be5fa9b23789da9": { username: "garrett", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/0c7261ad-bc68-4a09-f24a-28a076cc7500/rectcrop3", accountUrl: "https://warpcast.com/garrett" },
-    "0xda0ff93b971afac130fbb639ca8bf1e69d7915e9": { username: "gweiwhale.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/9d010922-8f9a-4421-af19-9e783c3dd600/rectcrop3", accountUrl: "https://warpcast.com/gweiwhale.eth" },
-    "0xe594469fde6ae29943a64f81d95c20f5f8eb2e04": { username: "paulofonseca", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/752dae94-1d61-4304-8ee4-dc7345babf00/rectcrop3", accountUrl: "https://warpcast.com/paulofonseca" },
-    "0xd5aefe935dfc9360945115dde8da98b596dfbb9f": { username: "lior", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/f2641cdd-906e-4cdd-ca3e-845ae2dfc900/original", accountUrl: "https://warpcast.com/lior" },
+  const farcasterUserData: Record<string, { username: string, pfpUrl: string, accountUrl: string, fid: number }> = {
+    "0xb68a6a83cfca2e7fde2aa5749b85e753f55d58cd": { username: "sky", pfpUrl: "https://i.imgur.com/g7qWYhr.png", accountUrl: "https://warpcast.com/sky", fid: 5516 },
+    "0x461337d4f089adf16455acb785415f6437da0c24": { username: "cryptonight", pfpUrl: "https://i.imgur.com/CuGTXcz.jpg", accountUrl: "https://warpcast.com/cryptonight", fid: 187908 },
+    "0x292ff025168d2b51f0ef49f164d281c36761ba2b": { username: "jonbo", pfpUrl: "https://i.imgur.com/zXst9SS.jpg", accountUrl: "https://warpcast.com/jonbo", fid: 1781 },
+    "0x2211d1d0020daea8039e46cf1367962070d77da9": { username: "jessepollak", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/1013b0f6-1bf4-4f4e-15fb-34be06fede00/original", accountUrl: "https://warpcast.com/jessepollak", fid: 99 },
+    "0x30ac71b1a1b0384c4c8b17e87d863cc4a2f3db28": { username: "kompreni", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/987efd90-4c51-44b5-203f-0c169a7c7f00/original", accountUrl: "https://warpcast.com/kompreni", fid: 15732 },
+    "0x40ff52e1848660327f16ed96a307259ec1d757eb": { username: "codyb.eth", pfpUrl: "https://i.imgur.com/AgwTmur.jpg", accountUrl: "https://warpcast.com/codyb.eth", fid: 746 },
+    "0x4a8d22cf7337be2f4d9c93d01b2893334d2438be": { username: "50cal-eth", pfpUrl: "https://i.imgur.com/fEAIqRk.jpg", accountUrl: "https://warpcast.com/50cal-eth", fid: 20965 },
+    "0x5e349eca2dc61abcd9dd99ce94d04136151a09ee": { username: "linda", pfpUrl: "https://i.seadn.io/gae/r6CW_kgQygQhI7-4JdWt_Nbf_bjFNnEM7dSns1nZGrijJvUMaLnpAFuBLwjsHXTkyX8zfgpRJCYibtm7ojeA2_ASQwSJgh7yKEFVMOI?w=500&auto=format", accountUrl: "https://warpcast.com/linda", fid: 12 },
+    "0x69dc230b06a15796e3f42baf706e0e55d4d5eaa1": { username: "rev", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/7bea0f51-169f-4b94-dde9-e77f85965300/original", accountUrl: "https://warpcast.com/rev", fid: 17672 },
+    "0x6f526d0b48332036094af3c4beabe49db175ff2a": { username: "nelsonrodmar", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/7ab9d214-a351-4460-9c81-3c3e1006be00/original", accountUrl: "https://warpcast.com/nelsonrodmar", fid: 6083 },
+    "0x8610f2d0e04b9926396a99f464c46fabcde942fc": { username: "alexpaden", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/d1754d75-49dd-4901-de4b-4283bb354b00/rectcrop3", accountUrl: "https://warpcast.com/alexpaden", fid: 533 },
+    "0x8cdb37ac91e2faf80c002fcf81a1165277388474": { username: "lowshot", pfpUrl: "https://i.imgur.com/9S4iCKo.png", accountUrl: "https://warpcast.com/lowshot", fid: 270517 },
+    "0xa32ad653ddb29aafaf67ca906f7bcee145444746": { username: "srijan.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/34aab6e6-015f-4363-98c4-a4abafecb800/rectcrop3", accountUrl: "https://warpcast.com/srijan.eth", fid: 377 },
+    "0xac1c4bed1c7c71fd3afde11e2bd4f18d969c843d": { username: "metaend.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/d94ed04c-8a86-4a23-3262-298016411500/original", accountUrl: "https://warpcast.com/metaend.eth", fid: 17940 },
+    "0xceab0087c5fbc22fb19293bd0be5fa9b23789da9": { username: "garrett", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/0c7261ad-bc68-4a09-f24a-28a076cc7500/rectcrop3", accountUrl: "https://warpcast.com/garrett", fid: 2802 },
+    "0xda0ff93b971afac130fbb639ca8bf1e69d7915e9": { username: "gweiwhale.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/9d010922-8f9a-4421-af19-9e783c3dd600/rectcrop3", accountUrl: "https://warpcast.com/gweiwhale.eth", fid: 207669 },
+    "0xe594469fde6ae29943a64f81d95c20f5f8eb2e04": { username: "paulofonseca", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/752dae94-1d61-4304-8ee4-dc7345babf00/rectcrop3", accountUrl: "https://warpcast.com/paulofonseca", fid: 7684 },
+    "0xd5aefe935dfc9360945115dde8da98b596dfbb9f": { username: "lior", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/f2641cdd-906e-4cdd-ca3e-845ae2dfc900/original", accountUrl: "https://warpcast.com/lior", fid: 7589 },
   };
 
   const [isLoading, setIsLoading] = useState(false); // Start with false to show initial values
@@ -366,85 +417,12 @@ const Project = () => {
                 </div>
               </div>
 
-              {/* View Demo Button - Desktop only */}
-              {/* <div className="hidden md:flex justify-center mt-4">
-                <a 
-                  href="https://farcaster.usequotient.xyz/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-gray-900 transition-colors"
-                >
-                  <span className="relative flex h-3 w-3 mr-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                  </span>
-                  View Demo
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    strokeWidth={1.5} 
-                    stroke="currentColor" 
-                    className="w-5 h-5 ml-2"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" 
-                    />
-                  </svg>
-                </a>
-              </div> */}
 
               {/* Mobile-only Project Title (appears below video) */}
               <div className="md:hidden px-4 pt-6 pb-4">
                 <h1 className="text-4xl font-bold">{project.title}</h1>
                 <p className="mt-1">{project.description}</p>
               </div>
-
-              {/* Creator info - only displayed on mobile */}
-                {/* <div className="flex items-center gap-4">
-                  <div className="w-[30px] h-[30px] rounded-full overflow-hidden">
-                    <Image
-                      src="/deepfield.png"
-                      alt="Creator"
-                      width={100}
-                      height={100}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                  <div>
-                    <p className="font-bold">{project.creator}</p>
-                  </div>
-                </div> */}
-                {/* <div className="flex justify-center mt-4">
-                  <a 
-                    href="https://farcaster.usequotient.xyz/" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center text-center w-full px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-gray-900 transition-colors"
-                  >
-                    <span className="relative flex h-3 w-3 mr-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                    </span>
-                    View Demo
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      fill="none" 
-                      viewBox="0 0 24 24" 
-                      strokeWidth={1.5} 
-                      stroke="currentColor" 
-                      className="w-5 h-5 ml-2"
-                    >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" 
-                      />
-                    </svg>
-                  </a>
-                </div> */}
             </div>
           </div>
         </div>
@@ -671,28 +649,26 @@ const Project = () => {
                             <div className="flex items-center">
                               {wallet.farcaster ? (
                                 <>
-                                  <a 
-                                    href={wallet.farcaster.accountUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center group"
+                                  <div 
+                                    onClick={() => wallet.farcaster && viewFarcasterProfile(wallet.farcaster.fid, wallet.farcaster.accountUrl)}
+                                    className="flex items-center group cursor-pointer"
                                   >
                                     <div className="w-8 h-8 rounded-full overflow-hidden mr-3 border border-gray-200">
                                       <img 
-                                        src={wallet.farcaster.pfpUrl} 
-                                        alt={wallet.farcaster.username} 
+                                        src={wallet.farcaster?.pfpUrl} 
+                                        alt={wallet.farcaster?.username} 
                                         className="w-full h-full object-cover"
                                       />
                                     </div>
                                     <div>
                                       <span className="text-sm font-medium text-gray-900 group-hover:text-purple-700 transition-colors">
-                                        {wallet.farcaster.username}
+                                        {wallet.farcaster?.username}
                                       </span>
                                       <div className="text-xs text-gray-500">
                                         {wallet.address.substring(0, 6)}...{wallet.address.substring(wallet.address.length - 4)}
                                       </div>
                                     </div>
-                                  </a>
+                                  </div>
                                 </>
                               ) : (
                                 <a 
@@ -708,11 +684,15 @@ const Project = () => {
                                 {wallet.count} {wallet.count === 1 ? 'mint' : 'mints'}
                               </span>
                             </div>
-                            <a 
-                              href={wallet.farcaster ? wallet.farcaster.accountUrl : `https://basescan.org/address/${wallet.address}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-gray-400 hover:text-purple-700"
+                            <div 
+                              onClick={() => {
+                                if (wallet.farcaster) {
+                                  viewFarcasterProfile(wallet.farcaster.fid, wallet.farcaster.accountUrl);
+                                } else {
+                                  window.open(`https://basescan.org/address/${wallet.address}`, '_blank');
+                                }
+                              }}
+                              className="text-gray-400 hover:text-purple-700 cursor-pointer"
                             >
                               <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
@@ -728,7 +708,7 @@ const Project = () => {
                                   d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" 
                                 />
                               </svg>
-                            </a>
+                            </div>
                           </li>
                         ))}
                       </ul>
@@ -779,30 +759,6 @@ const Project = () => {
         </div>
       </section>
       <div className="h-[200px]"></div>
-
-      {/* Thank You Backers Section - FULL WIDTH */}
-      {/* <section className="w-full py-16 border-t border-neutral-200 mt-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">TY Backers</h2>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8">
-            {[
-              "Alex Zhang",
-              "Linda Chen",
-              "Marco DeFi",
-              "Sarah Johnson",
-              "David Kim",
-              "Emma Wilson",
-              "Michael Brown",
-              "Jessica Lee",
-            ].map((name, index) => (
-              <div key={index} className="text-center">
-                <p className="font-medium">{name}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section> */}
 
       <section className="w-full py-16 border-t border-neutral-200 mt-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">

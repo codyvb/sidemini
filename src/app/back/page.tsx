@@ -536,11 +536,12 @@ const Project = () => {
               </button>
               {expandedFaqs['vision'] && (
                 <div className="py-3">
-                  <p className="mb-2">Version 1 is about enhancing every aspect of Version 0.1.</p>
+                  <p className="mb-2">Power tools for Farcaster</p>
                   <ul className="list-disc pl-6 space-y-2">
-                    <li>more full functioned version of current frame (I/e more open ended questions, better integration of external data into responses)</li>
-                    <li>power user interface for builders: export data (like followers), explore trends, monitor community (i/e for a protocol or ecosystem) or user analytics (mini app builders)</li>
-                    <li>api data exports to make it easy to integrate our data into your analytics systems.</li>
+                    <li>Understand the audience of your Farcaster Channel, Mini-app, or Token Community</li>
+                    <li>Gain insights on the interests, experiences, and capabilities of your community</li>
+                    <li>Access insights to implement tactics to increase growth and engagement</li>
+                    <li>Showcase your community's status, capability, and credentials</li>
                   </ul>
                 </div>
               )}

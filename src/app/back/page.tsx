@@ -97,7 +97,7 @@ const Project = () => {
   }, []);
 
   // Goal amount from project data
-  const GOAL_AMOUNT = 10106;
+  const GOAL_AMOUNT = 2000;
 
   // Sample project data (in a real app, this would come from an API or props)
   const project = {

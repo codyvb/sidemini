@@ -7,55 +7,19 @@ import Warning from "../../components/Warning";
 import SpaceAnimation from "../../components/SpaceAnimation";
 import Mint from "~/components/Mint";
 import { getTokenBalance, getContractMetadata, getNFTTransfers, getNFTCount, getWalletMintCounts } from "~/utils/alchemy";
+import { sdk } from "@farcaster/frame-sdk";
 
 
-// Function to handle viewing a Farcaster profile - works both in Farcaster app and regular browser
+// Function to handle viewing a Farcaster profile using the Farcaster SDK
 const viewFarcasterProfile = (fid: number, accountUrl: string) => {
-  // Check if we're in a Farcaster environment
-  const isFarcaster = typeof window !== 'undefined' && 
-    (window.location.hostname.includes('warpcast.com') || 
-     window.location.hostname.includes('farcaster.xyz') ||
-     // Check for Farcaster SDK
-     typeof (window as any).sdk !== 'undefined' ||
-     typeof (window as any).farcaster !== 'undefined');
+  console.log('Viewing Farcaster profile with FID:', fid);
   
-  console.log('Environment check:', { 
-    isFarcaster, 
-    hostname: typeof window !== 'undefined' ? window.location.hostname : 'unknown',
-    hasSDK: typeof window !== 'undefined' ? !!(window as any).sdk : false,
-    hasFarcaster: typeof window !== 'undefined' ? !!(window as any).farcaster : false
-  });
-
-  if (isFarcaster) {
-    console.log('Attempting to use Farcaster SDK to view profile with FID:', fid);
-    try {
-      // Try using the SDK from the @farcaster/frame-sdk package
-      if (typeof (window as any).sdk !== 'undefined' && (window as any).sdk.actions && (window as any).sdk.actions.viewProfile) {
-        console.log('Using sdk.actions.viewProfile');
-        (window as any).sdk.actions.viewProfile({ fid });
-        return;
-      }
-      
-      // Try using the farcaster global object
-      if (typeof (window as any).farcaster !== 'undefined' && (window as any).farcaster.viewProfile) {
-        console.log('Using farcaster.viewProfile');
-        (window as any).farcaster.viewProfile({ fid });
-        return;
-      }
-
-      // Fallback to URL scheme for mobile apps
-      const farcasterDeepLink = `https://warpcast.com/~/user/${fid}`;
-      console.log('Using deep link:', farcasterDeepLink);
-      window.location.href = farcasterDeepLink;
-    } catch (error) {
-      console.error('Error using Farcaster SDK:', error);
-      // Fallback to regular URL if SDK fails
-      console.log('Fallback to regular URL:', accountUrl);
-      window.open(accountUrl, '_blank');
-    }
-  } else {
-    // Regular browser environment - open the URL directly
-    console.log('Not in Farcaster environment, opening URL directly:', accountUrl);
+  try {
+    // Call the viewProfile action with the FID
+    sdk.actions.viewProfile({ fid });
+  } catch (error) {
+    console.error('Error viewing Farcaster profile:', error);
+    // Fallback to opening the URL directly if the SDK fails
     window.open(accountUrl, '_blank');
   }
 };

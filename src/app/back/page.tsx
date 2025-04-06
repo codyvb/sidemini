@@ -7,6 +7,7 @@ import Warning from "../../components/Warning";
 import SpaceAnimation from "../../components/SpaceAnimation";
 import Mint from "~/components/Mint";
 
+
 const Project = () => {
   const [activeTab, setActiveTab] = useState("Campaign");
   const [contractValue, setContractValue] = useState(0);
@@ -15,6 +16,8 @@ const Project = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [expandedFaqs, setExpandedFaqs] = useState<Record<string, boolean>>({});
   const [showBackButton, setShowBackButton] = useState(true);
+  
+
 
   // Function to toggle FAQ expansion
   const toggleFaq = (faqId: string) => {
@@ -132,7 +135,7 @@ const Project = () => {
         const balanceInEth = parseFloat(ethers.formatEther(balance));
 
         // Use fixed ETH price of $1800
-        const ethPrice = 1800.76;
+        const ethPrice = 1800;
         
         // Calculate USD value
         const valueInUsd = balanceInEth * ethPrice;
@@ -187,8 +190,8 @@ const Project = () => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(value);
   };
 
@@ -213,7 +216,7 @@ const Project = () => {
     return (
       <div className="w-full bg-neutral-200 h-1 mt-4">
         <div
-          className="bg-neutral-500 h-1"
+          className="bg-purple-700 h-1"
           style={{ width: `${percentage}%` }}
         ></div>
       </div>
@@ -270,9 +273,9 @@ const Project = () => {
           <div className="flex flex-col md:flex-row md:gap-8 justify-center">
             {/* Left column - Project details */}
             <div className="w-full md:w-8/12 md:max-w-4xl mx-auto">
-              <div className="w-full mt-[60px]">
+              <div className="w-full">
                 <div className="relative mx-0">
-                  <div className="relative w-full h-[70vh] bg-black overflow-hidden">
+                  <div className="relative w-full h-[30vh] bg-black overflow-hidden">
                     {/* DEMO label */}
                     <div className="absolute top-6 left-4 z-10 bg-opacity-80  py-1 rounded-md">
                       <span className="font-bold bg-white p-2 rounded-xl text-black">DEMO</span>
@@ -386,29 +389,25 @@ const Project = () => {
       </section>
 
       {/* Fundraising section - full width */}
-      <section className="w-full py-8">
+      <section className="w-full ">
         <div className="max-w-3xl md:max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center">
             <div className="w-full">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                <div className="mb-4 md:mb-0">
-                  <h2 className="text-2xl font-bold">
-                    {isLoading ? "Loading..." : formatCurrency(contractValue)}
-                  </h2>
-                  <p className="text-neutral-600">
-                    pledged of {project.stats.goal} goal
-                  </p>
-                </div>
-                <div className="mb-4 md:mb-0">
-                  <h2 className="text-2xl font-bold">{isLoading ? "Loading..." : backersCount}</h2>
-                  <p className="text-neutral-600">mints</p>
+              {renderProgressBar()}
+              <div className="grid grid-cols-5 gap-4 w-full items-start text-left mt-4">
+                <div className="col-span-2">
+                  <h2 className="text-2xl font-bold">{isLoading ? "Loading..." : formatCurrency(contractValue)}</h2>
+                  <p className="text-neutral-600 text-sm whitespace-nowrap">pledged of {project.stats.goal}</p>
                 </div>
                 <div>
+                  <h2 className="text-2xl font-bold">{isLoading ? "Loading..." : backersCount}</h2>
+                  <p className="text-neutral-600 text-sm">backers</p>
+                </div>
+                <div className="col-span-2">
                   <h2 className="text-2xl font-bold">{project.stats.daysToGo}</h2>
-                  <p className="text-neutral-600">days to go</p>
+                  <p className="text-neutral-600 text-sm">days to go</p>
                 </div>
               </div>
-              {renderProgressBar()}
               {/* <button
                 onClick={scrollToMintSection}
                 className="w-full bg-purple-700 text-white py-3 rounded-md font-medium mt-6 hover:bg-purple-800 transition-colors"
@@ -417,12 +416,8 @@ const Project = () => {
               </button> */}
 
               {/* All or nothing disclaimer */}
-              <div className="mt-4 text-center">
-                <p className="font-medium">All or nothing.</p>
-                <p className="text-sm">
-                  This project will only be funded if it reaches its goal by{" "}
-                  {project.stats.deadline}.
-                </p>
+              <div className="mt-4 text-left mb-5 mt-2 md:text-center">
+                <p className="text-sm">All or nothing. This project will only be funded if it reaches its goal by {project.stats.deadline}.</p>
               </div>
             </div>
           </div>

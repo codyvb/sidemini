@@ -116,7 +116,7 @@ const Project = () => {
     stats: {
       goal: "$2,000",
       backers: "2",
-      deadline: "Tue, April 8 2025 1:00 PM MST",
+      deadline: "Tue, April 8 2025 3:00 PM MST",
       daysToGo: "3",
     },
     creatorInfo: {
@@ -247,26 +247,31 @@ const Project = () => {
           <div className="fixed bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent z-40"></div>
           
           {/* Button container */}
-          <div className="fixed bottom-6 left-0 right-0 z-50 flex justify-center items-center pointer-events-none">
-            {/* Back to index button - subtle arrow only */}
-            <div className="absolute left-4 md:left-8 pointer-events-auto">
-              <a 
-                href="/"
-                className="flex items-center justify-center text-neutral-600 hover:text-black transition-colors"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                </svg>
-              </a>
-            </div>
-            
+          <div className="fixed bottom-6 left-0 right-0 z-50 flex flex-col items-center px-4 sm:px-6 w-full max-w-md mx-auto pointer-events-none">
             {/* Back this project button */}
             <button
               onClick={scrollToMintSection}
-              className="bg-purple-700 text-white py-3 px-8 rounded-md font-medium hover:bg-purple-800 transition-colors shadow-lg pointer-events-auto"
+              className="bg-purple-700 text-white py-3 px-8 rounded-md font-medium hover:bg-purple-800 transition-colors shadow-lg pointer-events-auto w-full"
             >
               Back this project
             </button>
+            
+            {/* Additional buttons */}
+            <div className="flex w-full gap-3 mt-3 pointer-events-auto">
+              <button
+                onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-white text-purple-700 border border-purple-700 py-2 px-4 rounded-md font-medium hover:bg-purple-50 transition-colors flex-1"
+              >
+                Learn More
+              </button>
+              
+              <button
+                onClick={() => document.getElementById('backers-section')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-white text-purple-700 border border-purple-700 py-2 px-4 rounded-md font-medium hover:bg-purple-50 transition-colors flex-1"
+              >
+                Backers
+              </button>
+            </div>
           </div>
         </>
       )}
@@ -446,7 +451,7 @@ const Project = () => {
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           {/* Project story content */}
           <div>
-            <h2 className="text-2xl font-bold mb-4">Story</h2>
+            <h2 id="story" className="text-2xl font-bold mb-4">Story</h2>
             <p className="mb-4">
             We&apos;re building power tools for builders on farcaster. A bridge connecting Farcaster data to other sources relevant to understanding onchain builders and the products they&apos;re working on.
             </p>
@@ -606,7 +611,7 @@ const Project = () => {
               <Warning />
               
               {/* Minters section - displays wallets that have minted NFTs */}
-              <div className="mt-8">
+              <div id="backers-section" className="mt-8">
                 <h3 className="text-xl font-bold mb-4">Current NFT Holders <span className="text-sm font-normal text-gray-600">({walletMintCounts.length} unique wallets)</span></h3>
                 
                 {isLoadingWallets ? (

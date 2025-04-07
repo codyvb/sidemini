@@ -227,6 +227,28 @@ export const getWalletMintCounts = async (contractAddress: string) => {
   }
 };
 
+// Get real-time ETH price in USD using CoinGecko's public API
+export const getEthPrice = async () => {
+  try {
+    // Use CoinGecko's public API to get the current ETH price
+    const response = await fetch(
+      'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd'
+    );
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const ethPrice = data?.ethereum?.usd || 0;
+    
+    return { price: ethPrice, error: null };
+  } catch (error) {
+    console.error("Error fetching ETH price:", error);
+    return { price: 0, error };
+  }
+};
+
 // Get total NFT count for a contract
 export const getNFTCount = async (contractAddress: string) => {
   const alchemy = initializeAlchemy();

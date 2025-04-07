@@ -47,7 +47,7 @@ export default function Demo({ title, onMintSuccess }: { title?: string, onMintS
   const { switchChain } = useSwitchChain();
   
   // Fixed ETH price in USD
-  const ethPrice = 1800.76;
+  const ethPrice = 1550;
 
   // Force switch to Base mainnet when the component mounts
   useEffect(() => {
@@ -215,8 +215,8 @@ export default function Demo({ title, onMintSuccess }: { title?: string, onMintS
         <div className="flex justify-between items-center mb-4">
           <div className="text-xl font-bold mt-[-20px]">Access Pass</div>
           <div className="text-right">
-            <div className="text-xl font-bold">${mintPriceUSD.toFixed(2)} USD</div>
-            <div className="text-sm text-gray-500">({mintPriceETH.toFixed(4)} ETH)</div>
+            <div className="text-xl font-bold">0.01 ETH</div>
+            <div className="text-sm text-gray-500">(~$15 USD)</div>
           </div>
         </div>
 
@@ -248,10 +248,10 @@ export default function Demo({ title, onMintSuccess }: { title?: string, onMintS
             <span className="text-xl font-bold">Total:</span>
             <div className="text-right">
               <div className="text-xl font-bold">
-                ${(mintPriceUSD * mintQuantity).toFixed(2)} USD
+                {mintQuantity === 1 ? '0.01' : '0.0' + mintQuantity} ETH
               </div>
               <div className="text-sm text-gray-500">
-                ({(mintPriceETH * mintQuantity).toFixed(4)} ETH)
+                (~$15 USD)
               </div>
             </div>
           </div>

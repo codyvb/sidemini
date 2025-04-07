@@ -27,8 +27,11 @@ const viewFarcasterProfile = (fid: number, accountUrl: string) => {
 const Project = () => {
   const [activeTab, setActiveTab] = useState("Campaign");
   // Initial state with reasonable defaults to avoid loading flicker
-  const [contractValue, setContractValue] = useState(432); // Default value from screenshot
-  const [backersCount, setBackersCount] = useState(17); // Default based on known wallets
+  const [contractValue, setContractValue] = useState<number | null>(null);
+  const [ethBalance, setEthBalance] = useState<number>(0);
+  // Fixed ETH price
+  const ethPrice = 1550;
+  const [backersCount, setBackersCount] = useState<number | null>(null);
   const [walletMintCounts, setWalletMintCounts] = useState<Array<{address: string, count: number, farcaster?: {username: string, pfpUrl: string, accountUrl: string, fid: number}}>>([]);
   const [isLoadingWallets, setIsLoadingWallets] = useState(true);
   const [hasMinted, setHasMinted] = useState(false);
@@ -142,7 +145,7 @@ const Project = () => {
   }, []);
 
   // Goal amount from project data
-  const GOAL_AMOUNT = 2000;
+  const GOAL_AMOUNT = 1; // Goal in ETH
 
   // Sample project data (in a real app, this would come from an API or props)
   const project = {
@@ -197,6 +200,11 @@ const Project = () => {
           setWalletMintCounts(sortedWallets);
           // Update backers count to reflect the number of unique wallet holders
           setBackersCount(wallets.length);
+        
+        // Only set loading to false when both contract value and backers count are loaded
+        if (contractValue !== null) {
+          setIsLoading(false);
+        }
         } else {
           console.error("Error fetching wallet mint counts:", error);
         }
@@ -209,6 +217,8 @@ const Project = () => {
     
     fetchWalletMintCounts();
   }, []);
+
+  // Using a fixed ETH price of $2000
 
   // Function to fetch contract value and total mints
   useEffect(() => {
@@ -226,22 +236,28 @@ const Project = () => {
           const fallbackBalance = await provider.getBalance(NFT_CONTRACT_ADDRESS);
           const balanceInEth = parseFloat(ethers.formatEther(fallbackBalance));
           
-          // Use fixed ETH price of $1800
-          const ethPrice = 1800;
+          // Add 0.33 ETH to the balance
+          const adjustedBalanceInEth = balanceInEth + 0.33;
           
-          // Calculate USD value
-          const valueInUsd = balanceInEth * ethPrice;
+          // Calculate USD value using current ETH price
+          const valueInUsd = adjustedBalanceInEth * ethPrice;
           setContractValue(valueInUsd);
+          
+          // Store the ETH amount for the progress bar
+          setEthBalance(adjustedBalanceInEth);
         } else {
           // Convert balance from wei to ETH
           const balanceInEth = parseFloat(ethers.formatEther(balance));
           
-          // Use fixed ETH price of $1800
-          const ethPrice = 1800;
+          // Add 0.33 ETH to the balance
+          const adjustedBalanceInEth = balanceInEth + 0.33;
           
-          // Calculate USD value
-          const valueInUsd = balanceInEth * ethPrice;
+          // Calculate USD value using current ETH price
+          const valueInUsd = adjustedBalanceInEth * ethPrice;
           setContractValue(valueInUsd);
+          
+          // Store the ETH amount for the progress bar
+          setEthBalance(adjustedBalanceInEth);
         }
 
         // We no longer need to set backers count here since it's handled in fetchWalletMintCounts
@@ -249,7 +265,10 @@ const Project = () => {
       } catch (error) {
         console.error("Error fetching contract data:", error);
       } finally {
+        // Only set loading to false when both contract value and backers count are loaded
+      if (backersCount !== null) {
         setIsLoading(false);
+      }
       }
     };
 
@@ -258,14 +277,11 @@ const Project = () => {
     const intervalId = setInterval(fetchContractData, 60000);
     return () => clearInterval(intervalId);
   }, []);
+
   // Format currency for display
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
+  const formatCurrency = (value: number | null) => {
+    if (value === null) return "Loading...";
+    return `$${Math.floor(value).toLocaleString()}`;
   };
 
   const tabs = [
@@ -284,8 +300,8 @@ const Project = () => {
   ];
 
   const renderProgressBar = () => {
-    // Calculate percentage using contract value
-    const percentage = Math.min((contractValue / GOAL_AMOUNT) * 100, 100);
+    // Calculate percentage using ETH amount directly
+    const percentage = Math.min((ethBalance / GOAL_AMOUNT) * 100, 100);
     return (
       <div className="w-full bg-neutral-200 h-1 mt-4">
         <div
@@ -433,10 +449,10 @@ const Project = () => {
               <div className="grid grid-cols-5 gap-4 w-full items-start text-left mt-4">
                 <div className="col-span-2">
                   <h2 className="text-2xl font-bold">{isLoading ? "Loading..." : formatCurrency(contractValue)}</h2>
-                  <p className="text-neutral-600 text-sm whitespace-nowrap">pledged of {project.stats.goal}</p>
+                  <p className="text-neutral-600 text-sm whitespace-nowrap">pledged of 1 ETH</p>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold">{isLoading ? "Loading..." : backersCount}</h2>
+                  <h2 className="text-2xl font-bold">{isLoading ? "Loading..." : backersCount !== null ? backersCount : "Loading..."}</h2>
                   <p className="text-neutral-600 text-sm">backers</p>
                 </div>
                 <div className="col-span-2">
@@ -666,7 +682,8 @@ const Project = () => {
                   
                   {isLoadingWallets ? (
                     <div className="flex justify-center items-center py-6">
-                      <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-purple-700"></div>
+                      <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-purple-700 mr-2"></div>
+                      <span className="text-sm font-normal text-neutral-400">Loading...</span>
                     </div>
                   ) : walletMintCounts.length > 0 ? (
                     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">

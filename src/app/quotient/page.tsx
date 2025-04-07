@@ -56,6 +56,21 @@ const Project = () => {
     "0xda0ff93b971afac130fbb639ca8bf1e69d7915e9": { username: "gweiwhale.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/9d010922-8f9a-4421-af19-9e783c3dd600/rectcrop3", accountUrl: "https://warpcast.com/gweiwhale.eth", fid: 207669 },
     "0xe594469fde6ae29943a64f81d95c20f5f8eb2e04": { username: "paulofonseca", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/752dae94-1d61-4304-8ee4-dc7345babf00/rectcrop3", accountUrl: "https://warpcast.com/paulofonseca", fid: 7684 },
     "0xd5aefe935dfc9360945115dde8da98b596dfbb9f": { username: "lior", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/f2641cdd-906e-4cdd-ca3e-845ae2dfc900/original", accountUrl: "https://warpcast.com/lior", fid: 7589 },
+    // New users added
+    "0x0aa34eb615ab330b64060ff9fa994e72a7a95b59": { username: "ted", pfpUrl: "https://openseauserdata.com/files/fd28c65d9b5192168fb259009a3afd36.png", accountUrl: "https://warpcast.com/ted", fid: 239 },
+    "0x5b93ff82faaf241c15997ea3975419dddd8362c5": { username: "coopahtroopa.eth", pfpUrl: "https://i.imgur.com/0NB7bxd.gif", accountUrl: "https://warpcast.com/coopahtroopa.eth", fid: 206 },
+    "0x2eeaa132a480dc7713423f2e3dae6cfc8f584880": { username: "scottrepreneur.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/bb379a90-1399-4d37-309e-7996d86a8d00/original", accountUrl: "https://warpcast.com/scottrepreneur.eth", fid: 828 },
+    "0x3149a0a0d183ac74cfbf3b728a9d7e308b69e91f": { username: "cryptonight", pfpUrl: "https://i.imgur.com/CuGTXcz.jpg", accountUrl: "https://warpcast.com/cryptonight", fid: 187908 },
+    "0xcbf37605a4a169cb16bf18f01329ef218df32f93": { username: "lior", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/f2641cdd-906e-4cdd-ca3e-845ae2dfc900/original", accountUrl: "https://warpcast.com/lior", fid: 7589 },
+    "0x1d2757e7b628981ec185e31bf419c61294e0660a": { username: "ywc", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/8aa35445-3675-4c0f-1403-7a16fc1db800/original", accountUrl: "https://warpcast.com/ywc", fid: 3300 },
+    "0x65e3419e633833df1d602e7905cb9c7e541f0849": { username: "mikadoe.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/99da14ec-41d0-4d59-5e4b-9434cc900b00/original", accountUrl: "https://warpcast.com/mikadoe.eth", fid: 477126 },
+    "0x779816da803e3f69f6f06f9679efc442def1bbb0": { username: "huugo.eth", pfpUrl: "https://i.imgur.com/vAXN3k1.jpg", accountUrl: "https://warpcast.com/huugo.eth", fid: 12977 },
+    "0x81a05845917716772e91b87538b7a6676424a24f": { username: "codeofcrypto", pfpUrl: "https://arweave.net/Sy54hEt6gmPG5jOSqcRahs1Gjfv8q8sFhkgzzp_GkcQ/", accountUrl: "https://warpcast.com/codeofcrypto", fid: 9227 },
+    "0xc75446a6adaef73269dbdece73536977b2b639e0": { username: "ruminations", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/3331d888-3988-4d37-19c8-7bb0199a4e00/original", accountUrl: "https://warpcast.com/ruminations", fid: 190000 },
+    "0xe4659245b1160e399fb4f841fd949cb38d37e9a5": { username: "omghax.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/fdc849c2-9269-4724-92e8-f374eccc6600/original", accountUrl: "https://warpcast.com/omghax.eth", fid: 193445 },
+    "0xa37809b129e7407b5d2595a8d545368924552f42": { username: "sdv.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/b476a0d8-c139-48df-ae12-5328624ebc00/original", accountUrl: "https://warpcast.com/sdv.eth", fid: 2745 },
+    "0xcaa1e7119ad3b3c765b2d93b0a061b1f2f789b5b": { username: "ornella", pfpUrl: "https://i.imgur.com/74kR7Oc.jpg", accountUrl: "https://warpcast.com/ornella", fid: 10103 },
+    "0xbc9b50d89af9cbeff1652f8e4b2052e12efe9915": { username: "victoctero", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/a9695ac4-4d95-4a68-ebd0-a26fe039e000/rectcrop3", accountUrl: "https://warpcast.com/victoctero", fid: 8109 },
   };
 
   const [isLoading, setIsLoading] = useState(false); // Start with false to show initial values
@@ -754,7 +769,32 @@ const Project = () => {
                     </div>
                   )}
                   
-  
+                  {/* New section for unmatched wallets */}
+                  {/* <div className="mt-6">
+                    <h3 className="text-xl font-bold mb-4">Unmatched Wallets</h3>
+                    {isLoadingWallets ? (
+                      <div className="flex justify-center items-center py-6">
+                        <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-purple-700 mr-2"></div>
+                        <span className="text-sm font-normal text-neutral-400">Loading...</span>
+                      </div>
+                    ) : (
+                      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <div className="mb-2 text-sm text-gray-600">
+                          Raw list of wallets without Farcaster accounts:
+                        </div>
+                        {walletMintCounts.filter(wallet => !wallet.farcaster).length > 0 ? (
+                          <pre className="bg-gray-100 p-3 rounded text-xs font-mono overflow-x-auto">
+                            {walletMintCounts
+                              .filter(wallet => !wallet.farcaster)
+                              .map(wallet => wallet.address)
+                              .join('\n')}
+                          </pre>
+                        ) : (
+                          <p className="text-gray-500 text-center py-3">All wallets are matched with Farcaster accounts</p>
+                        )}
+                      </div>
+                    )}
+                  </div> */}
                 </div>
                 
                 {/* Warning section */}

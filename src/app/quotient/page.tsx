@@ -672,55 +672,46 @@ const Project = () => {
                     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                       <ul className="divide-y divide-gray-200">
                         {walletMintCounts.map((wallet, index) => (
-                          <li key={index} className="px-4 py-3 flex items-center justify-between hover:bg-gray-50">
+                          <li 
+                            key={index} 
+                            className="px-4 py-3 flex items-center justify-between hover:bg-gray-50 cursor-pointer"
+                            onClick={() => {
+                              if (wallet.farcaster) {
+                                viewFarcasterProfile(wallet.farcaster.fid, wallet.farcaster.accountUrl);
+                              } else {
+                                window.open(`https://basescan.org/address/${wallet.address}`, '_blank');
+                              }
+                            }}
+                          >
                             <div className="flex items-center">
                               {wallet.farcaster ? (
-                                <>
-                                  <div 
-                                    onClick={() => wallet.farcaster && viewFarcasterProfile(wallet.farcaster.fid, wallet.farcaster.accountUrl)}
-                                    className="flex items-center group cursor-pointer"
-                                  >
-                                    <div className="w-8 h-8 rounded-full overflow-hidden mr-3 border border-gray-200">
-                                      <img 
-                                        src={wallet.farcaster?.pfpUrl} 
-                                        alt={wallet.farcaster?.username} 
-                                        className="w-full h-full object-cover"
-                                      />
-                                    </div>
-                                    <div>
-                                      <span className="text-sm font-medium text-gray-900 group-hover:text-purple-700 transition-colors">
-                                        {wallet.farcaster?.username}
-                                      </span>
-                                      <div className="text-xs text-gray-500">
-                                        {wallet.address.substring(0, 6)}...{wallet.address.substring(wallet.address.length - 4)}
-                                      </div>
+                                <div className="flex items-center group">
+                                  <div className="w-8 h-8 rounded-full overflow-hidden mr-3 border border-gray-200">
+                                    <img 
+                                      src={wallet.farcaster?.pfpUrl} 
+                                      alt={wallet.farcaster?.username} 
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
+                                  <div>
+                                    <span className="text-sm font-medium text-gray-900 group-hover:text-purple-700 transition-colors">
+                                      {wallet.farcaster?.username}
+                                    </span>
+                                    <div className="text-xs text-gray-500">
+                                      {wallet.address.substring(0, 6)}...{wallet.address.substring(wallet.address.length - 4)}
                                     </div>
                                   </div>
-                                </>
+                                </div>
                               ) : (
-                                <a 
-                                  href={`https://basescan.org/address/${wallet.address}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-sm font-medium text-gray-900 hover:text-purple-700 transition-colors"
-                                >
+                                <div className="text-sm font-medium text-gray-900 hover:text-purple-700 transition-colors">
                                   {wallet.address.substring(0, 6)}...{wallet.address.substring(wallet.address.length - 4)}
-                                </a>
+                                </div>
                               )}
                               <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                                 {wallet.count} {wallet.count === 1 ? 'mint' : 'mints'}
                               </span>
                             </div>
-                            <div 
-                              onClick={() => {
-                                if (wallet.farcaster) {
-                                  viewFarcasterProfile(wallet.farcaster.fid, wallet.farcaster.accountUrl);
-                                } else {
-                                  window.open(`https://basescan.org/address/${wallet.address}`, '_blank');
-                                }
-                              }}
-                              className="text-gray-400 hover:text-purple-700 cursor-pointer"
-                            >
+                            <div className="text-gray-400 hover:text-purple-700">
                               <svg 
                                 xmlns="http://www.w3.org/2000/svg" 
                                 className="h-4 w-4" 

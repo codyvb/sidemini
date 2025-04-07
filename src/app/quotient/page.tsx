@@ -155,7 +155,7 @@ const Project = () => {
       goal: "$2,000",
       backers: "2",
       deadline: "Tue, April 8 2025 3:00 PM MST",
-      daysToGo: "3",
+      daysToGo: "1",
     },
     creatorInfo: {
       firstCreated: true,

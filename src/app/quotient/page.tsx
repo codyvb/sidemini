@@ -789,7 +789,7 @@ const Project = () => {
                   )}
                   
                   {/* Section for all unique wallet holders */}
-                  <div className="mt-6">
+                  {/* <div className="mt-6">
                     <h3 className="text-xl font-bold mb-4">All Unique Wallet Holders</h3>
                     {isLoadingWallets ? (
                       <div className="flex justify-center items-center py-6">
@@ -812,7 +812,7 @@ const Project = () => {
                         )}
                       </div>
                     )}
-                  </div>
+                  </div> */}
                 </div>
                 
                 {/* Warning section */}

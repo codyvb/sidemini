@@ -8,7 +8,7 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-20%);
+    transform: translateX(-5%);
   }
 }
 
@@ -21,6 +21,10 @@
   display: flex;
   animation: marquee 15s linear infinite;
   white-space: nowrap;
+}
+
+:root {
+  --radius: 0.5rem;
 }
 
 body {

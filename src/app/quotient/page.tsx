@@ -29,6 +29,49 @@ const AnimatedEllipsis = () => {
   return <span className="text-neutral-400">.{dots}</span>;
 };
 
+// Countdown Timer component
+const CountdownTimer = () => {
+  const targetDate = new Date('April 8, 2025 15:00:00 MST');
+  const [timeRemaining, setTimeRemaining] = useState("");
+  
+  useEffect(() => {
+    const calculateTimeRemaining = () => {
+      const now = new Date();
+      const difference = targetDate.getTime() - now.getTime();
+      
+      if (difference <= 0) {
+        setTimeRemaining("Time's up!");
+        return;
+      }
+      
+      // Calculate time units
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      
+      // Format the time string
+      if (days > 0) {
+        setTimeRemaining(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+      } else if (hours > 0) {
+        setTimeRemaining(`${hours}h ${minutes}m ${seconds}s`);
+      } else if (minutes > 0) {
+        setTimeRemaining(`${minutes}m ${seconds}s`);
+      } else {
+        setTimeRemaining(`${seconds}s`);
+      }
+    };
+    
+    // Calculate immediately and then set interval
+    calculateTimeRemaining();
+    const interval = setInterval(calculateTimeRemaining, 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
+  
+  return <span>{timeRemaining}</span>;
+};
+
 // Function to handle viewing a Farcaster profile using the Farcaster SDK
 const viewFarcasterProfile = (fid: number, accountUrl: string) => {
   console.log('Viewing Farcaster profile with FID:', fid);
@@ -480,7 +523,7 @@ const Project = () => {
           <div className="flex flex-col items-center">
             <div className="w-full">
               {renderProgressBar()}
-              <div className="grid grid-cols-5 gap-4 w-full items-start text-left mt-4">
+              <div className="grid grid-cols-5 gap-4 w-full items-start text-left mt-8">
                 <div className="col-span-2">
                   <h2 className="text-2xl font-bold">{isLoading ? <AnimatedEllipsis /> : formatCurrency(contractValue)}</h2>
                   <p className="text-neutral-600 text-sm whitespace-nowrap">pledged of 1 ETH</p>
@@ -489,9 +532,11 @@ const Project = () => {
                   <h2 className="text-2xl font-bold">{isLoading ? <AnimatedEllipsis /> : backersCount !== null ? backersCount : <AnimatedEllipsis />}</h2>
                   <p className="text-neutral-600 text-sm">backers</p>
                 </div>
-                <div className="col-span-2">
-                  <h2 className="text-2xl font-bold">{project.stats.daysToGo}</h2>
-                  <p className="text-neutral-600 text-sm">days to go</p>
+                <div className="col-span-2 mt-[-6px]">
+                  <div className="p-2 bg-neutral-200 rounded-lg shadow-sm">
+                    <h2 className="text-xl font-medium"><CountdownTimer /></h2>
+                    <p className="text-neutral-600 text-sm">remaining</p>
+                  </div>
                 </div>
               </div>
               {/* <button

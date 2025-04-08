@@ -199,6 +199,11 @@ export default function Demo({ title, onMintSuccess }: { title?: string, onMintS
     connect({ connector: config.connectors[connectorIndex] });
     setShowWalletModal(false);
   };
+  
+  // Close wallet modal
+  const closeWalletModal = () => {
+    setShowWalletModal(false);
+  };
 
   if (!isSDKLoaded) {
     return <div>Loading...</div>;
@@ -316,6 +321,44 @@ export default function Demo({ title, onMintSuccess }: { title?: string, onMintS
                     return "Confirmed!";
                   })()
                 : "Pending"}
+            </div>
+          </div>
+        )}
+        
+        {/* Wallet Selection Modal */}
+        {showWalletModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeWalletModal}>
+            <div className="bg-white rounded-xl p-6 max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
+              <h3 className="text-lg font-bold mb-4">Connect Wallet</h3>
+              <div className="space-y-3">
+                <button 
+                  onClick={() => connectWithWallet(1)} 
+                  className="w-full py-3 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-between"
+                >
+                  <span>Browser Wallet</span>
+                  <span>MetaMask / Injected</span>
+                </button>
+                <button 
+                  onClick={() => connectWithWallet(2)} 
+                  className="w-full py-3 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-between"
+                >
+                  <span>Coinbase Wallet</span>
+                  <span>Connect with Coinbase</span>
+                </button>
+                <button 
+                  onClick={() => connectWithWallet(3)} 
+                  className="w-full py-3 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-between"
+                >
+                  <span>WalletConnect</span>
+                  <span>Scan with phone</span>
+                </button>
+              </div>
+              <button 
+                onClick={closeWalletModal} 
+                className="w-full mt-4 py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-100"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         )}

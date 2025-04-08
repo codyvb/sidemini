@@ -31,7 +31,7 @@ const AnimatedEllipsis = () => {
 
 // Countdown Timer component
 const CountdownTimer = () => {
-  const targetDate = new Date('April 8, 2025 15:00:00 MST');
+  const targetDate = new Date('April 8, 2025 14:00:00 MST');
   const [timeRemaining, setTimeRemaining] = useState("");
   
   useEffect(() => {
@@ -327,7 +327,7 @@ const Project = () => {
           const balanceInEth = parseFloat(ethers.formatEther(balance));
           
           // Add 0.33 ETH to the balance
-          const adjustedBalanceInEth = balanceInEth + 0.33;
+          const adjustedBalanceInEth = balanceInEth + 1.03;
           
           // Calculate USD value using current ETH price
           const valueInUsd = adjustedBalanceInEth * ethPrice;

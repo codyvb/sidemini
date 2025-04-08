@@ -9,6 +9,25 @@ import Mint from "~/components/Mint";
 import { getTokenBalance, getContractMetadata, getNFTTransfers, getNFTCount, getWalletMintCounts } from "~/utils/alchemy";
 import { sdk } from "@farcaster/frame-sdk";
 
+// Animated Ellipsis component
+const AnimatedEllipsis = () => {
+  const [dots, setDots] = useState("");
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDots(prev => {
+        if (prev === "") return ".";
+        if (prev === ".") return "..";
+        if (prev === "..") return "...";
+        return "";
+      });
+    }, 500);
+    
+    return () => clearInterval(interval);
+  }, []);
+  
+  return <span className="text-neutral-400">.{dots}</span>;
+};
 
 // Function to handle viewing a Farcaster profile using the Farcaster SDK
 const viewFarcasterProfile = (fid: number, accountUrl: string) => {
@@ -463,11 +482,11 @@ const Project = () => {
               {renderProgressBar()}
               <div className="grid grid-cols-5 gap-4 w-full items-start text-left mt-4">
                 <div className="col-span-2">
-                  <h2 className="text-2xl font-bold">{isLoading ? "Loading..." : formatCurrency(contractValue)}</h2>
+                  <h2 className="text-2xl font-bold">{isLoading ? <AnimatedEllipsis /> : formatCurrency(contractValue)}</h2>
                   <p className="text-neutral-600 text-sm whitespace-nowrap">pledged of 1 ETH</p>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold">{isLoading ? "Loading..." : backersCount !== null ? backersCount : "Loading..."}</h2>
+                  <h2 className="text-2xl font-bold">{isLoading ? <AnimatedEllipsis /> : backersCount !== null ? backersCount : <AnimatedEllipsis />}</h2>
                   <p className="text-neutral-600 text-sm">backers</p>
                 </div>
                 <div className="col-span-2">
@@ -769,9 +788,9 @@ const Project = () => {
                     </div>
                   )}
                   
-                  {/* New section for unmatched wallets */}
-                  {/* <div className="mt-6">
-                    <h3 className="text-xl font-bold mb-4">Unmatched Wallets</h3>
+                  {/* Section for all unique wallet holders */}
+                  <div className="mt-6">
+                    <h3 className="text-xl font-bold mb-4">All Unique Wallet Holders</h3>
                     {isLoadingWallets ? (
                       <div className="flex justify-center items-center py-6">
                         <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-purple-700 mr-2"></div>
@@ -780,21 +799,20 @@ const Project = () => {
                     ) : (
                       <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                         <div className="mb-2 text-sm text-gray-600">
-                          Raw list of wallets without Farcaster accounts:
+                          Raw list of all unique wallet addresses:
                         </div>
-                        {walletMintCounts.filter(wallet => !wallet.farcaster).length > 0 ? (
+                        {walletMintCounts.length > 0 ? (
                           <pre className="bg-gray-100 p-3 rounded text-xs font-mono overflow-x-auto">
                             {walletMintCounts
-                              .filter(wallet => !wallet.farcaster)
                               .map(wallet => wallet.address)
                               .join('\n')}
                           </pre>
                         ) : (
-                          <p className="text-gray-500 text-center py-3">All wallets are matched with Farcaster accounts</p>
+                          <p className="text-gray-500 text-center py-3">No wallet data available</p>
                         )}
                       </div>
                     )}
-                  </div> */}
+                  </div>
                 </div>
                 
                 {/* Warning section */}
@@ -808,7 +826,7 @@ const Project = () => {
       </section>
       <div className="h-[200px]"></div>
 
-      {/* <section className="w-full py-16 border-t border-neutral-200 mt-12">
+      <section className="w-full py-16 border-t border-neutral-200 mt-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
           <div className="text-center">
             <h2 className="text-4xl font-bold mb-6">Follow Quotient on Warpcast</h2>
@@ -822,7 +840,7 @@ const Project = () => {
             </a>
           </div>
         </div>
-      </section> */}
+      </section>
 
       <div className="h-[100px]"></div>
 

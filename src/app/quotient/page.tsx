@@ -133,6 +133,7 @@ const Project = () => {
     "0xa37809b129e7407b5d2595a8d545368924552f42": { username: "sdv.eth", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/b476a0d8-c139-48df-ae12-5328624ebc00/original", accountUrl: "https://warpcast.com/sdv.eth", fid: 2745 },
     "0xcaa1e7119ad3b3c765b2d93b0a061b1f2f789b5b": { username: "ornella", pfpUrl: "https://i.imgur.com/74kR7Oc.jpg", accountUrl: "https://warpcast.com/ornella", fid: 10103 },
     "0xbc9b50d89af9cbeff1652f8e4b2052e12efe9915": { username: "victoctero", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/a9695ac4-4d95-4a68-ebd0-a26fe039e000/rectcrop3", accountUrl: "https://warpcast.com/victoctero", fid: 8109 },
+    "0xa674f2c33f504345f50ca6c850f9fd8338612166": { username: "camille", pfpUrl: "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/0ccbec40-1e15-42ae-4d47-ba0407588800/rectcrop3", accountUrl: "https://warpcast.com/camille", fid: 2530 },
   };
 
   const [isLoading, setIsLoading] = useState(false); // Start with false to show initial values

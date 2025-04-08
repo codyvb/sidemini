@@ -19,9 +19,7 @@ export const config = createConfig({
     coinbaseWallet({
       appName: 'Quotient',
     }),
-    walletConnect({
-      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'default-project-id',
-    }),
+    // Removed WalletConnect due to missing projectId
   ],
 });
 

@@ -221,7 +221,7 @@ export default function Demo({ title, onMintSuccess }: { title?: string, onMintS
           <div className="text-xl font-bold mt-[-20px]">Access Pass</div>
           <div className="text-right">
             <div className="text-xl font-bold">0.01 ETH</div>
-            <div className="text-sm text-gray-500">(~$15 USD)</div>
+            <div className="text-sm text-gray-500">(~${(0.01 * ethPrice).toFixed(0)} USD)</div>
           </div>
         </div>
 
@@ -256,7 +256,7 @@ export default function Demo({ title, onMintSuccess }: { title?: string, onMintS
                 {mintQuantity === 1 ? '0.01' : '0.0' + mintQuantity} ETH
               </div>
               <div className="text-sm text-gray-500">
-                (~$15 USD)
+                (~${(mintQuantity * 0.01 * ethPrice).toFixed(0)} USD)
               </div>
             </div>
           </div>
@@ -344,13 +344,6 @@ export default function Demo({ title, onMintSuccess }: { title?: string, onMintS
                 >
                   <span>Coinbase Wallet</span>
                   <span>Connect with Coinbase</span>
-                </button>
-                <button 
-                  onClick={() => connectWithWallet(3)} 
-                  className="w-full py-3 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center justify-between"
-                >
-                  <span>WalletConnect</span>
-                  <span>Scan with phone</span>
                 </button>
               </div>
               <button 

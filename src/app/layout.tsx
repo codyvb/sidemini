@@ -16,10 +16,9 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: "sidequest.build",
-    description: "back the build",
-    images: [
+      images: [
       {
-        url: "./card7.png",
+        url: "./widecard.png",
         width: 1200,
         height: 630,
         alt: "",
@@ -29,11 +28,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "sidequest.build",
-    images: ["./card.png"],
+    images: ["./widecard.png"],
   },
-  other: {
-    'fc:frame': '{"version":"next","imageUrl":"https://mini.sidequest.build/fox.png","aspectRatio":"3:2","button":{"title":"launch sidequest","action":{"type":"launch_frame","name":"launch","url":"https://mini.sidequest.build","splashImageUrl":"https://mini.sidequest.build/card.png","splashBackgroundColor":"#000000"}}}'
-  }
 };
 
 

@@ -114,7 +114,7 @@ const Header = () => {
           {/* Buttons */}
           <div className="flex items-center space-x-4 flex-shrink-0">
             <Link
-              href="/devs"
+              href="/pitch"
               className={`px-4 py-2 border rounded-md font-medium ${
                 isDarkMode
                   ? "border-gray-700 text-white hover:bg-gray-800"

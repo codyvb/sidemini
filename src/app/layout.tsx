@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 import { getSession } from "~/auth"
 import "~/app/globals.css";
 import { Providers } from "~/app/providers";
-import Header from "~/components/Header";
-import Footer from "~/components/Footer";
+
 
 export const metadata: Metadata = {
   title: "sidequest.build",
@@ -18,7 +17,7 @@ export const metadata: Metadata = {
     title: "sidequest.build",
       images: [
       {
-        url: "./widecard.png",
+        url: "https://mini.sidequest.build/widecard.png",
         width: 1200,
         height: 630,
         alt: "",
@@ -28,8 +27,11 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "sidequest.build",
-    images: ["./widecard.png"],
+    images: ["https://mini.sidequest.build/widecard.png"],
   },
+  other: {
+    'fc:frame': '{"version":"next","imageUrl":"https://mini.sidequest.build/goldcard3.png","aspectRatio":"3:2","button":{"title":"launch sidequest","action":{"type":"launch_frame","name":"launch","url":"https://mini.sidequest.build","splashImageUrl":"https://mini.sidequest.build/card.png","splashBackgroundColor":"#000000"}}}'
+  }
 };
 
 
